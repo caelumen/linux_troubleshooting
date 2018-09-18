@@ -14,6 +14,7 @@
 
 # 참고 - default user
 | 배포판 | 기본 사용자 이름|
+|---|---|
 | Amazon Linux 2 또는 Amazon Linux AMI |  ec2-user  |
 | Centos AMI                           |  centos |
 | Debian AMI   | admin 또는 root |
