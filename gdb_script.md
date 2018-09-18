@@ -1,8 +1,58 @@
 # [ GDB ] #
 
+# 1. core dump 설정
 ulimit -a 
 ulimit -c unlimited
 
+
+# 2. 의도적 App. fault 유발
+
+## python
+<pre>
+import sys
+sys.setrecursionlimit(1<<30)
+f = lambda f:f(f)
+f(f)
+</pre>
+
+##
+|   |
+|---|
+| <pre>
+#include <stdio.h>
+#include <stdlib.h>
+
+void Abnormal()
+{
+    int n = 1024;
+    char *p = (char *)malloc(sizeof(char) * 1);
+
+    free(p);
+    free(p);                /* double free */
+    printf(p);
+    void (*fp)();
+    fp = p;
+    fp();
+}
+
+void AbnormalContainer()
+{
+    Abnormal();
+}
+
+void Normal()
+{
+    printf("normal function.\n");
+}
+
+int main(int argc, char **argv)
+{
+    AbnormalContainer();
+    Normal();
+    return 0;
+}
+
+</pre>}
 
 # compile a source that make a fault intentionally
 gcc -g -o test test_fault_01.c
