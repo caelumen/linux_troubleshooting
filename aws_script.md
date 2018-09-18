@@ -45,6 +45,7 @@
 
 
 > cd .ssh
+
 > sudo vi .ssh/authorized_keys
 
 * 키값 변경 : ssh-rsa [AAAAB===>키값==>Mab1] key_name_public
