@@ -42,16 +42,27 @@ sudo service httpd start
 </pre>
 ![아파치 테스트 화면](https://mblogthumb-phinf.pstatic.net/MjAxNjExMDhfNDEg/MDAxNDc4NTYzNzMyMjQ3.PqaY6ZTLGl_KFLfdZyyYNnx_mpYlUQmQNVXoOCb3PKcg.5pYlKyUR4nr0F1pYeRNngKBMrkxbI1-ytke6xyPXx1sg.JPEG.wizardkyn/httpd_RHEL72.JPG?type=w2)
 
-# AWS EC2 => Putty 사용 
+
+------------------------------------------
+
+# 5. 다시 SSH #
+![SSH](http://www.fs.com/images/ckfinder/ftp_images/tutorial/secure-ssh-client.jpg)
+- SSH 암호화 방식
+
+## AWS EC2 => Putty 사용 ##
+![putty](http://www.fs.com/images/ckfinder/ftp_images/tutorial/putty.jpg)
  - PuTTYgen을 사용하여 프라이빗 키 변환
  - 개인 키를 변환하려면,
  - PuTTYgen을 시작합니다(예: [Start] 메뉴에서 [All Programs > PuTTY > PuTTYgen] 선택).
    Type of key to generate에서 RSA를 선택합니다.
 
+## ssh key 관련 파일 
+<pre>
+cd ~/.ssh
+ls -al 
+</pre>
 
-
-==============================================
-# SSH Key 변경
+# 6. SSH Key 변경 #
 ================================================
 
 <pre>
