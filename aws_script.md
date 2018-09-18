@@ -62,17 +62,31 @@ cd ~/.ssh
 ls -al 
 </pre>
 
+|파일  | 내용 | 위치    |
+|------|-----|-----|
+|id_rsa      | private key    |  client    |
+|id_rsa.pub  | public key  | client    |
+|authorized_keys  | public key, 접속할 때, id_rsa에서 가져와 저장  |  remote server   |
+|known_hosts |  처음 접속할 때, yes/no에 따라 known hosts에 등록 | client |
+
+** knwon_host에 아래처럼 등록 된다. 
+<pre>
+ec2-13-xxx-xxx-xxx.ap-northeast-2.compute.amazonaws.com,111.111.111.xxx ssh-rsa AAAAB3NzaC...D0AV
+</pre>
+
+# 6. SSH key Error 발생 !! #
+
+
 # 6. SSH Key 변경 #
 ================================================
 
 <pre>
-cd .ssh
+cd ~/.ssh
 sudo vi .ssh/authorized_keys
 </pre>
 
 * 키값 변경 : ssh-rsa [AAAAB===>키값==>Mab1] key_name_public
-- 잘변경이 되었는지, scp로 접속해 보자!!!
-
+- 제대로 변경이 되었는지, scp로 접속해 보자!!!
 
 
 # 정확한 Private-Public Key를 대입하여도, 접속 불가
