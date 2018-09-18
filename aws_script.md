@@ -40,6 +40,7 @@ sudo yum update –y
 sudo yum install –y httpd 
 sudo service httpd start 
 </pre>
+![아파치 테스트 화면](https://mblogthumb-phinf.pstatic.net/MjAxNjExMDhfNDEg/MDAxNDc4NTYzNzMyMjQ3.PqaY6ZTLGl_KFLfdZyyYNnx_mpYlUQmQNVXoOCb3PKcg.5pYlKyUR4nr0F1pYeRNngKBMrkxbI1-ytke6xyPXx1sg.JPEG.wizardkyn/httpd_RHEL72.JPG?type=w2)
 
 # AWS EC2 => Putty 사용 
  - PuTTYgen을 사용하여 프라이빗 키 변환
