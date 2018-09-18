@@ -39,12 +39,12 @@ reboot
 <pre>
 sudo cat /proc/iomem | grep kernel
 sudo sysctl -a | grep nmi_watchdog
-sysctl -w kernel.nmi_watchdog=1
+sudo sysctl -w kernel.nmi_watchdog=1
 </pre>
 
 # 자! 이제 (의도적) 크래쉬를 발생 시킨다.
 <pre>
-sudo su
+sudo su -
 
 echo 1 > /proc/sys/kernel/sysrq
 echo c > /proc/sysrq-trigger
