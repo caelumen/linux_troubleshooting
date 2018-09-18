@@ -22,6 +22,12 @@
 | SUSE AMI | ec2-user 또는 root |
 | Ubuntu AMI | ubuntu |
 
+|   |   |   |   |   |
+|---|---|---|---|---|
+|   |   |   |   |   |
+|   |   |   |   |   |
+|   |   |   |   |   |
+
 
 # AWS EC2 => Putty 사용 
  - PuTTYgen을 사용하여 프라이빗 키 변환
