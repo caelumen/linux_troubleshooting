@@ -46,7 +46,7 @@
 
 > cd .ssh
 > sudo vi .ssh/authorized_keys
->
+
 * 키값 변경 : ssh-rsa [AAAAB===>키값==>Mab1] key_name_public
 - 잘변경이 되었는지, scp로 접속해 보자!!!
 
