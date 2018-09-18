@@ -6,12 +6,12 @@
 - https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmlinux
 
 
-# SSH 맛보기 #
+# 1. SSH 맛보기 #
  - 아직 미공개
  - https://s3.ap-northeast-2.amazonaws.com/windflex/test_key/test_key_share.pem
  - ssh -i test_key_share.pem ec2-user@13.124.162.236
 
-# AWS 설치 #
+# 2. AWS 설치 #
 ![AWS 가입 및 설치]https://aws.amazon.com/ko/
 - AWS 가입이 완료되면, EC2의 인스턴스 생성
 - Key Pair 확보, Private Key 중요 !!!
@@ -29,7 +29,17 @@
 | Ubuntu AMI | ubuntu |
 
 
+# 3. Git-bash / terminal 접속 #
+<pre>
+ssh -i test_key_share.pem ec2-user@13.124.162.236
+</pre>
 
+# 4. apache 설치 #
+<pre>
+sudo yum update –y 
+sudo yum install –y httpd 
+sudo service httpd start 
+</pre>
 
 # AWS EC2 => Putty 사용 
  - PuTTYgen을 사용하여 프라이빗 키 변환
