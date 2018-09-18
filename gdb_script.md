@@ -30,13 +30,13 @@ disas main
 
 # attach debugger to  apache service
 [ec2-user@ip-172-31-18-1 ~]$ ps -ef | grep http
-# root      3750     1  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
-# apache    3751  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
-# apache    3752  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
-# apache    3753  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
-# apache    3754  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
-# apache    3755  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
-# apache    3801  3750  0 08:12 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ root      3750     1  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ apache    3751  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ apache    3752  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ apache    3753  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ apache    3754  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ apache    3755  3750  0 08:10 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+ apache    3801  3750  0 08:12 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
 
 sudo gdb -q -p 3750
 generate-core-file
@@ -51,5 +51,10 @@ set listsize 100
 generate-core-file
 
 
+## python crash code
+import sys
+sys.setrecursionlimit(1<<30)
+f = lambda f:f(f)
+f(f)
 
 
