@@ -1,54 +1,52 @@
 # [ AWS ]
 
-https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/putty.exe
-https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/puttygen.exe
-https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmcore
-https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmlinux
+- https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/putty.exe
+- https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/puttygen.exe
+- https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmcore
+- https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmlinux
 
 
-
-# SSH ¸Àº¸±â
- - ¾ÆÁ÷ ¹Ì°ø°³
+# SSH ë§›ë³´ê¸°
+ - ì•„ì§ ë¯¸ê³µê°œ
  - https://s3.ap-northeast-2.amazonaws.com/windflex/test_key/test_key_share.pem
  - ssh -i test_key_share.pem ec2-user@13.124.162.236
 
 
+# ì°¸ê³  - default user
+| ë°°í¬íŒ | ê¸°ë³¸ ì‚¬ìš©ìž ì´ë¦„|
+| Amazon Linux 2 ë˜ëŠ” Amazon Linux AMI |  ec2-user  |
+| Centos AMI                           |  centos |
+| Debian AMI   | admin ë˜ëŠ” root |
+| Fedora AMI | ec2-user ë˜ëŠ” fedora |
+| RHEL AMI | ec2-user ë˜ëŠ” root |
+| SUSE AMI | ec2-user ë˜ëŠ” root |
+| Ubuntu AMI | ubuntu |
 
 
-# Âü°í - default user
- - Amazon Linux 2 ¶Ç´Â Amazon Linux AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº ec2-user
- - Centos AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº centos
- - Debian AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº admin ¶Ç´Â root
- - Fedora AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº ec2-user ¶Ç´Â fedora
- - RHEL AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº ec2-user ¶Ç´Â root
- - SUSE AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº ec2-user ¶Ç´Â root
- - Ubuntu AMIÀÇ °æ¿ì »ç¿ëÀÚ ÀÌ¸§Àº ubuntu
-
-
-# AWS EC2 => Putty »ç¿ë 
- - PuTTYgenÀ» »ç¿ëÇÏ¿© ÇÁ¶óÀÌºø Å° º¯È¯
- - °³ÀÎ Å°¸¦ º¯È¯ÇÏ·Á¸é,
- - PuTTYgenÀ» ½ÃÀÛÇÕ´Ï´Ù(¿¹: [Start] ¸Þ´º¿¡¼­ [All Programs > PuTTY > PuTTYgen] ¼±ÅÃ).
-   Type of key to generate¿¡¼­ RSA¸¦ ¼±ÅÃÇÕ´Ï´Ù.
+# AWS EC2 => Putty ì‚¬ìš© 
+ - PuTTYgenì„ ì‚¬ìš©í•˜ì—¬ í”„ë¼ì´ë¹— í‚¤ ë³€í™˜
+ - ê°œì¸ í‚¤ë¥¼ ë³€í™˜í•˜ë ¤ë©´,
+ - PuTTYgenì„ ì‹œìž‘í•©ë‹ˆë‹¤(ì˜ˆ: [Start] ë©”ë‰´ì—ì„œ [All Programs > PuTTY > PuTTYgen] ì„ íƒ).
+   Type of key to generateì—ì„œ RSAë¥¼ ì„ íƒí•©ë‹ˆë‹¤.
 
 
 
 ==============================================
-# SSH Key º¯°æ
+# SSH Key ë³€ê²½
 ================================================
 
 
 
 cd .ssh
 sudo vi .ssh/authorized_keys
- -> Å°°ª º¯°æ : ssh-rsa [AAAAB===>Å°°ª==>Mab1] key_name_public
+ -> í‚¤ê°’ ë³€ê²½ : ssh-rsa [AAAAB===>í‚¤ê°’==>Mab1] key_name_public
 
-Àßº¯°æÀÌ µÇ¾ú´ÂÁö, scp·Î Á¢¼ÓÇØ º¸ÀÚ!!!
+ìž˜ë³€ê²½ì´ ë˜ì—ˆëŠ”ì§€, scpë¡œ ì ‘ì†í•´ ë³´ìž!!!
 
 
 
-# Á¤È®ÇÑ Private-Public Key¸¦ ´ëÀÔÇÏ¿©µµ, Á¢¼Ó ºÒ°¡
- - SCP¸¦ ÀÌ¿ëÇÏ¿©, AWS¿¡ key¸¦ º¹»ç
+# ì •í™•í•œ Private-Public Keyë¥¼ ëŒ€ìž…í•˜ì—¬ë„, ì ‘ì† ë¶ˆê°€
+ - SCPë¥¼ ì´ìš©í•˜ì—¬, AWSì— keyë¥¼ ë³µì‚¬
  - ssh -i test_key_share.pem  ec2-user@172.31.18.1
  - ==> unprotected !!!!
 
