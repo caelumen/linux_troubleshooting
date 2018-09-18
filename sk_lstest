@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat /usr/local/bin/sk_lstest_test >> ./test.c
