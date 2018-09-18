@@ -15,10 +15,9 @@ f = lambda f:f(f)
 f(f)
 </pre>
 
-##
-|   |
-|---|
-| <pre>
+## C 언어 구문
+<pre>
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -55,28 +54,40 @@ int main(int argc, char **argv)
 </pre>}
 
 # compile a source that make a fault intentionally
+<pre>
 gcc -g -o test test_fault_01.c
 ./test
+</pre>
 
 
+# 누구의 Core 파일인가?
+<pre>
 file core.*
+</pre>
 
+# gdb 시작
 gdb ./test core.*
 
-where
-bt
-b *main
-b 10
-run
-bt
-info register
-disas main
+# 주요 명령어
+
+|   |   |
+|---|---|
+| where |  |
+| bt
+| b *main  |  |
+| b 10  |  |
+| run  |  |
+| bt  |  |
+| info register  |  |
+| disas main  |  |
 
 
-
-
-# apache service start
-
+# apache 서비스 스타트 
+<pre>
+sudo yum install -y httpd
+rpm -qa httpd
+sudo service httpd start
+</pre>
 
 # attach debugger to  apache service
 [ec2-user@ip-172-31-18-1 ~]$ ps -ef | grep http
