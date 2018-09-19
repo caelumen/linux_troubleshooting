@@ -1,4 +1,5 @@
- - 강의 자료 [강의자료] : https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/docs/(Day3)Linux_TroubleShooting_v0.7.pptx
+# 강의 
+- 강의 자료 [강의자료] : https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/docs/(Day3)Linux_TroubleShooting_v0.7.pptx
 
 
 # [ AWS ]
