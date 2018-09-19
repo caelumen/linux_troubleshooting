@@ -1,9 +1,10 @@
 # [ GDB ] #
 
 # 1. core dump 설정
-ulimit -a 
+<pre>
+ulimit -a
 ulimit -c unlimited
-
+</pre>
 
 # 2. 의도적 App. fault 유발
 
