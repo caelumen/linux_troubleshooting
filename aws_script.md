@@ -103,4 +103,20 @@ sudo vi .ssh/authorized_keys
  - ssh-keygen -t rsa
 
 
+# 인증키 변환
+- 퍼블릭/프라이빗 키 쌍을 하나 만든다 (AWS 등)
+- authorized keys 파일을 만들자
+<pre>
+tr -d '\r' < lecture_test_001_public > test1
+tr -d '\n' < test1 > test2
+</pre>
+ - test2에 담겨있는 파일을 카피
+ - ssh-rsa [키값] 키파일이름
+ 
+- 변경하고자 하는 서버에 접속
+<pre>
+cd .ssh
+mv authorized_keys authorized_keys_old
+cat > authorized_keys
+</pre>
 
