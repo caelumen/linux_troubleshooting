@@ -1,6 +1,13 @@
-linux_troubleshooting
+# 리눅스 트러블슈팅 강의 #
+
+## 리눅스 트러블슈팅 강의 관련 자료 
+- 발표자료
+- 명령어 실행 관련 Script 파일
+- 강의 중 사용하는 Source Code 
 
 
-��������
+
+
+
 
 
