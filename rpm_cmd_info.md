@@ -40,6 +40,7 @@ rpm -Uvh my-package.rpm
 </pre>
 
 
+
 # RPM Query #
 
 ## 전체 설치 패키지 보기 ##
