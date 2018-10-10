@@ -41,8 +41,11 @@ Redirecting to /bin/systemctl status abrtd.service
 ● abrtd.service - ABRT Automated Bug Reporting Tool
    Loaded: loaded (/usr/lib/systemd/system/abrtd.service; enabled; vendor preset: enabled)
    Active: inactive (dead)
-
 </code>
+</pre>
+<pre>
+[ec2-user@ip-172-31-26-184 ~]$ sudo service abrtd start
+Redirecting to /bin/systemctl start abrtd.service
 </pre>
 
 
