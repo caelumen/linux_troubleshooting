@@ -13,7 +13,8 @@ yum install abrt-cli
 </pre>
 
 <pre>
-# `service abrtd status`
+# service abrtd status
+</pre>
 
 <code>
 [appadmin@localhost poc]$ `service abrtd status`
@@ -30,7 +31,6 @@ Redirecting to /bin/systemctl status  abrtd.service
 10월 09 23:43:20 localhost.localdomain abrtd[4792]: Init complete, entering main loop
 </code>
 
-</pre>
 
 
 
