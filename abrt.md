@@ -13,10 +13,10 @@ yum install abrt-cli
 </pre>
 
 <pre>
-# `service abrtd status
+# `service abrtd status`
 
 <code>
-[appadmin@localhost poc]$ service abrtd status
+[appadmin@localhost poc]$ `service abrtd status`
 Redirecting to /bin/systemctl status  abrtd.service
 ● abrtd.service - ABRT Automated Bug Reporting Tool
    Loaded: loaded (/usr/lib/systemd/system/abrtd.service; enabled; vendor preset: enabled)
