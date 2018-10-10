@@ -12,6 +12,7 @@
 yum install abrt-cli
 </pre>
 
+## 정상 동작은 아래와 같이 확인 할 수 있다. 
 <pre>
 # service abrtd status
 </pre>
@@ -33,6 +34,12 @@ Redirecting to /bin/systemctl status  abrtd.service
 </code>
 </pre>
 
+<pre>
+[ec2-user@ip-172-31-26-184 ~]$ ps -ef | grep abrt
+root      1671     1  0 07:17 ?        00:00:00 /usr/sbin/abrtd -d -s
+</pre>
+
+
 ## 만약 Active 되지 않은 상태라면, 아래와 같은 결과를 출력
 <pre>
 <code>
@@ -46,6 +53,17 @@ Redirecting to /bin/systemctl status abrtd.service
 <pre>
 [ec2-user@ip-172-31-26-184 ~]$ sudo service abrtd start
 Redirecting to /bin/systemctl start abrtd.service
+</pre>
+
+
+<pre>
+[ec2-user@ip-172-31-26-184 ~]$ sudo abrt-cli list
+The Autoreporting feature is disabled. Please consider enabling it by issuing
+'abrt-auto-reporting enabled' as a user with root privileges
+[ec2-user@ip-172-31-26-184 ~]$ abrt-auto-reporting enabled
+Cannot save the changes made to the configuration
+[ec2-user@ip-172-31-26-184 ~]$ sudo abrt-auto-reporting enabled
+
 </pre>
 
 
