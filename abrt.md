@@ -16,6 +16,7 @@ yum install abrt-cli
 # service abrtd status
 </pre>
 
+<pre>
 <code>
 [appadmin@localhost poc]$ `service abrtd status`
 Redirecting to /bin/systemctl status  abrtd.service
@@ -30,7 +31,19 @@ Redirecting to /bin/systemctl status  abrtd.service
 10월 09 23:43:20 localhost.localdomain systemd[1]: Starting ABRT Automated Bug Reporting Tool...
 10월 09 23:43:20 localhost.localdomain abrtd[4792]: Init complete, entering main loop
 </code>
+</pre>
 
+## 만약 Active 되지 않은 상태라면, 아래와 같은 결과를 출력
+<pre>
+<code>
+[ec2-user@ip-172-31-26-184 ~]$ sudo service abrtd status
+Redirecting to /bin/systemctl status abrtd.service
+● abrtd.service - ABRT Automated Bug Reporting Tool
+   Loaded: loaded (/usr/lib/systemd/system/abrtd.service; enabled; vendor preset: enabled)
+   Active: inactive (dead)
+
+</code>
+</pre>
 
 
 
