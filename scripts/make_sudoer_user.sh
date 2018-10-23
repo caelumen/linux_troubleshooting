@@ -1,5 +1,5 @@
 #!/bin/bash
-username=$(whoami)
+username=$(whoami)   # 변수선언시 띄어쓰기가 중요하다.
 
 if [ $# -lt 1 ]
 then
@@ -7,7 +7,7 @@ then
    exit 0
 fi
 
-if [ "$username" == "root" ]
+if [ "$username" == "root" ]  # 띄어쓰기 유의하라. 숫자비교와 스트링 비교는 다르다.
 then
 
 
