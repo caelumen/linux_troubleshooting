@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sed -i "/ssh/{s/ 22\/tcp/ 2222\/tcp/}" /etc/services
+sed -i "/ssh/{s/ 22\/udp/ 2222\/udp/}" /etc/services
+
+echo "Script executed successfully"
+#echo "Change Number 22 to 2222"
+#echo "End"
