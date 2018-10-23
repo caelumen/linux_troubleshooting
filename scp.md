@@ -6,6 +6,7 @@
 
 <pre>
 scp a.txt appadmin@127.0.0.1:/home/appadmin
+scp -P 9022 a.txt appadmin@127.0.0.1:/home/appadmin
 </pre>
 
 
@@ -32,6 +33,7 @@ scp -P 9022 appadmin@127.0.0.1:/home/appadmin a.txt
 
 <pre>
 scp -r appadmin@127.0.0.1:/var/www/html /var/www/
+scp -P 9022 -r root@127.0.0.1:/Admin/Scripts ./Scripts/
 </pre>
 
 
