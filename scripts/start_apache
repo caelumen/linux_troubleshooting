@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cur_alive=$(ps -ef | grep http | grep -v grep | grep appadmin | wc -l)
+
+if [ $cur_alive -eq 0 ]
+then
+sudo /home/appadmin/http_2.4.33/bin/apachectl start
+fi
