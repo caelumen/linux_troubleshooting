@@ -4,7 +4,7 @@
 
 `scp 파일명 계정@서버주소:Path`
 
-## 기본적으로 :  scp <source> <destination>  개념이다. ##
+## 기본적으로 :  `scp <source> <destination>`  개념이다. ##
 <pre>
 scp a.txt appadmin@127.0.0.1:/home/appadmin
 scp -P 9022 a.txt appadmin@127.0.0.1:/home/appadmin
