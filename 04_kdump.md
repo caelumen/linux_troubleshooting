@@ -19,7 +19,18 @@
   + /proc/vmcore ==> dd, ram capture, Storage dump 등
   + dump level에 따라서 덤프장치를 결정
 
+### /etc/kdump.conf ###
 - KDump 설정은 `/etc/kdump.conf` : https://github.com/windflex-sjlee/linux_troubleshooting/blob/master/conf/kdump.conf
+~~~
+path /var/crash
+core_collector makedumpfile -l --message-level 1 -d 31
+~~~
+- dump-level : 0~31 , message-level : 0~31 (0에 가까울 수록 Full Dump )
+
+`net nfs.example.com:/export/vmcores` : NFS
+`net kdump@crash.example.com`  : SSH/SCP - 해당서버의 /var/crash에 저장 
+- 위와 같이 원격지 (NFS, SSH) 설정 가능
+  (Client에서 해당 mount에 쓰기권한 필요 ) 
 
 
 ### Kernel Dump가 필요한 경우 ###
@@ -33,7 +44,6 @@
 - MCE ( Machine Check Exception )
 - ACPI (Adavanced Configuration and Power Interface) 
 - SMP (Symetric Multi Proccessor )
-
 
 
 # KDUMP 구동 확인 #
@@ -118,70 +128,92 @@ menuentry 'CentOS Linux (3.10.0-514.el7.x86_64) 7 (Core)' --class centos --class
 
 
 ## grub 설정이 안되어 있으면,##
-## /etc/default/grub 파일을 변경후 리부팅##
+- `/etc/default/grub` 파일을 변경후 리부팅
 
 ## kdump가 사용할 메모리 공간이 할당 되어 있는지 확인 ##
-<pre>
-
+~~~
 grep "kernel" /proc/iomem
-
 sysctl -a | grep nmi_watchdog
  ==> 미설정 시, vi /etc/sysctl.conf 에서 kernel.nmi_watchdog =1
  ==> or echo 1 > 
-</pre>
+~~~
+- 혹은, `cat /proc/iomem | grep kernel`
 
-
+~~~
+[appadmin@clu_2 ~]$ sysctl -a | grep nmi_watchdog
+kernel.nmi_watchdog = 1
+~~~
 
 ## SysRQ ##
-<pre>
-sysctl -a | grep sysrq
-sysctl -w kernel.sysrq=1      or      echo 1 > /proc/sys/kernel/sysrq
-echo c > /proc/sysrq-trigger
-</pre>
+~~~
+[appadmin@clu_2 ~]$ sysctl -a | grep sysrq
+kernel.sysrq = 16
+sysctl -w kernel.sysrq=1
+~~~
+- `sysctl -w kernel.sysrq=1` 대신 직접 메모리에 쓰는  `echo 1 > /proc/sys/kernel/sysrq` 동일 효과
+- 위는 SysRQ의 직접적인 키보드 입력을 세팅하는 것임, 기본적으로 Disabled 이며, rebooting하면 초기화됨
 
-## rebooting 됨 ##
+### SysRQ 시그널 입력 ###
+`echo c > /proc/sysrq-trigger`
+* rebooting 됨 
 
-
-## vmcore 파일 위치 ##
-<pre>
-find / -name vmcore 
- ==> /var/crash/ ...
-</pre>
 
 ## vmcore 파일 위치 ##
- - /var/crash/ ...
- - /etc/kdump.conf 에서 변경 가능
+- `/etc/kdump.conf`의 설정에 따라서 /var/crash에 vmcore가 저장된다. 
+- 경우에 따라서 경로확보가 안되는 경우가 있으나, vmcore파일을 찾아 본다.
+- `find / -name vmcore`
+~~~
+[root@clu_1 ~]# find / -name vmcore
+find: ‘/run/user/1000/gvfs’: Permission denied
+/root/vmcore
+/root/vmcore/504vmcore/vmcore
+/var/spool/abrt/vmcore-127.0.0.1-2018-09-27-15:13:14/vmcore
+/var/crash/127.0.0.1-2018-09-27-15:13:14/vmcore
+/var/crash/127.0.0.1-2018-12-06-22:02:37/vmcore
+~~~
 
-## crash 분석 ##
-<pre>
-crash <vmlinux> <vmcore>
-</pre>
+- 기왕 찾은 김에, vmlinux 파일도 찾아 보자.
+~~~
+[root@clu_1 ~]# find / -name vmlinux
+find: ‘/run/user/1000/gvfs’: Permission denied
+/root/vmcore/2.6.32-504.el6.x86_64/vmlinux
+/root/vmcore/3.10.0-514.el7.x86_64/vmlinux
+/root/vmcore/3.10.0-862.11.6.el7.x86_64/vmlinux
+/usr/lib/debug/usr/lib/modules/3.10.0-514.el7.x86_64/vmlinux
+~~~
 
-<pre>
+# CRASH 분석 #
+- kdump는 kernel의 이상현상 발생 시, 그 시점에 상태(vmcore)를 저장하는 것이다. 
+- 이상발생 시점이 저장되었으며, 이제 저장된 상태를 분석해야 한다. 
+- vmcore가 정상적으로 dump 되었을 경우, crash 명령어를 통하여 분석할 수 있다.
+
+
+### CRASH 명령어 ###
+- `crash <vmlinux> <vmcore>`
+~~~
 rpm -q --list kernel-debuginfo | grep vmlinux
 crash /usr/lib/debug/lib/modules/3.10.0-514.el7.x86_64/vmlinux /var/crash/127.0.0.1-2018-09-27-15\:13\:14/vmcore
-</pre>
+~~~
 
-<pre>
+~~~
 bt
 disas sysrq_handle_crash+22
 disas -l sysrq_handle_crash+22
 vi /usr/src/debug/kernel-3.10.0-514.el7/linux-3.10.0-514.el7.x86_64/drivers/tty/sysrq.c
-
-</pre>
+~~~
 
 ## <lab> ##
-<pre>
+~~~
 vmcore
 https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmcore
-</pre>
+~~~
  
-<pre> 
+~~~
 vmlinux
 https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmlinux
-</pre>
+~~~
 
-<pre>
+~~~
 sys
 kmem -i
 ps
@@ -190,7 +222,13 @@ sys | grep LOAD
 ps | wc -l
 ps | grep -c httpd
 ps | grep -c java
-</pre>
+~~~
+
+
+
+
+
+
 
 
 
