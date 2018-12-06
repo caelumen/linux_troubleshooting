@@ -7,6 +7,9 @@
 yum install debuginfo-install 
 debuginfo-install procps-ng
 ~~~
+- kdump 용 설치를 미리 해 둔다.
+`yum --enablerepo=base-debuginfo install –y kernel-debuginfo-$(uname -r)`
+
 
 ## GDB (GNU Debugger) 개요 ##
 - Strace 는 모니터링 대상의 System call 을 추적한다.
