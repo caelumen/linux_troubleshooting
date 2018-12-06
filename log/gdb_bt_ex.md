@@ -3,7 +3,7 @@
 
 <pre>
 <code>
-
+~~~
 (gdb) bt
 
 #0  inline std::allocator<char>::allocator(std::allocator<char> const&) ()
@@ -30,7 +30,7 @@
     
 #6  0x9fffffffbbc74510:2 in inline std::allocator<char>::allocator() ()
     at /opt/aCC/include_std/memory:250
-    
+   ~~~ 
 </code>
 </pre>
 
