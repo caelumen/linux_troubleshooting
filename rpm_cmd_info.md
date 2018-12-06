@@ -15,6 +15,8 @@
 |-K	|--checksig	서명 검증 |  
 |-a	|--all, query/verify all packages   |  
 |-f	|--file, query/verify package file |  
+|-h	|--hash, 패키지 인스톨할 때, hash 출력, 보통 V옵션과 같이 사용한다 |  
+
 
 
 
