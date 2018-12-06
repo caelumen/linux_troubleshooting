@@ -191,38 +191,129 @@ find: ‘/run/user/1000/gvfs’: Permission denied
 ### CRASH 명령어 ###
 - `crash <vmlinux> <vmcore>`
 ~~~
-rpm -q --list kernel-debuginfo | grep vmlinux
-crash /usr/lib/debug/lib/modules/3.10.0-514.el7.x86_64/vmlinux /var/crash/127.0.0.1-2018-09-27-15\:13\:14/vmcore
+[root@clu_1 ~]# rpm -q --list kernel-debuginfo | grep vmlinux
+[root@clu_1 ~]# crash /usr/lib/debug/usr/lib/modules/3.10.0-514.el7.x86_64/vmlinux /var/crash/127.0.0.1-2018-12-06-22\:02\:37/vmcore
 ~~~
 
+- crash 분석 초기 화면의 예
 ~~~
-bt
-disas sysrq_handle_crash+22
-disas -l sysrq_handle_crash+22
-vi /usr/src/debug/kernel-3.10.0-514.el7/linux-3.10.0-514.el7.x86_64/drivers/tty/sysrq.c
+ KERNEL: /usr/lib/debug/usr/lib/modules/3.10.0-514.el7.x86_64/vmlinux
+    DUMPFILE: /var/crash/127.0.0.1-2018-12-06-22:02:37/vmcore  [PARTIAL DUMP]
+        CPUS: 2
+        DATE: Thu Dec  6 22:02:50 2018
+      UPTIME: 02:35:04
+LOAD AVERAGE: 0.00, 0.01, 0.05
+       TASKS: 375
+    NODENAME: clu_1
+     RELEASE: 3.10.0-514.el7.x86_64
+     VERSION: #1 SMP Tue Nov 22 16:42:41 UTC 2016
+     MACHINE: x86_64  (2394 Mhz)
+      MEMORY: 2 GB
+       PANIC: "SysRq : Trigger a crash"
+         PID: 5437
+     COMMAND: "bash"
+        TASK: ffff88004e8d8000  [THREAD_INFO: ffff880019518000]
+         CPU: 1
+       STATE: TASK_RUNNING (SYSRQ)
 ~~~
 
-## <lab> ##
-~~~
-vmcore
-https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmcore
-~~~
- 
-~~~
-vmlinux
-https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/vmlinux
-~~~
+
 
 ~~~
 sys
-kmem -i
+bt
+disas sysrq_handle_crash+22
+disas /m sysrq_handle_crash+22
+disas -l sysrq_handle_crash+22
+vi /usr/src/debug/kernel-3.10.0-514.el7/linux-3.10.0-514.el7.x86_64/drivers/tty/sysrq.c
 ps
-ps | grep -c RU
-sys | grep LOAD
-ps | wc -l
-ps | grep -c httpd
-ps | grep -c java
+kmem -i
 ~~~
+
+### backtrace ###
+~~~
+crash> bt
+PID: 5437   TASK: ffff88004e8d8000  CPU: 1   COMMAND: "bash"
+ #0 [ffff88001951bb10] machine_kexec at ffffffff81059cdb
+ #1 [ffff88001951bb70] __crash_kexec at ffffffff81105182
+ #2 [ffff88001951bc40] crash_kexec at ffffffff81105270
+ #3 [ffff88001951bc58] oops_end at ffffffff8168ee88
+ #4 [ffff88001951bc80] no_context at ffffffff8167ea93
+ #5 [ffff88001951bcd0] __bad_area_nosemaphore at ffffffff8167eb29
+ #6 [ffff88001951bd18] bad_area at ffffffff8167ee4d
+ #7 [ffff88001951bd40] __do_page_fault at ffffffff81691d1f
+ #8 [ffff88001951bda0] do_page_fault at ffffffff81691dc5
+ #9 [ffff88001951bdd0] page_fault at ffffffff8168e088
+    [exception RIP: sysrq_handle_crash+22]
+    RIP: ffffffff813ed516  RSP: ffff88001951be88  RFLAGS: 00010246
+    RAX: 000000000000000f  RBX: ffffffff81a7bfe0  RCX: 0000000000000000
+    RDX: 0000000000000000  RSI: ffff88007fd0f838  RDI: 0000000000000063
+    RBP: ffff88001951be88   R8: 0000000000000086   R9: 0000000000000211
+    R10: 0000000000000210  R11: 0000000000000003  R12: 0000000000000063
+    R13: 0000000000000000  R14: 0000000000000004  R15: 0000000000000000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+#10 [ffff88001951be90] __handle_sysrq at ffffffff813edd37
+~~~
+
+### disas sysrq_handle_crash+22 ###
+~~~
+crash> disas sysrq_handle_crash+22
+Dump of assembler code for function sysrq_handle_crash:
+   0xffffffff813ed500 <+0>:     nopl   0x0(%rax,%rax,1)
+   0xffffffff813ed505 <+5>:     push   %rbp
+   0xffffffff813ed506 <+6>:     mov    %rsp,%rbp
+   0xffffffff813ed509 <+9>:     movl   $0x1,0x5fe341(%rip)        # 0xffffffff819eb854 <panic_on_oops>
+   0xffffffff813ed513 <+19>:    sfence
+   0xffffffff813ed516 <+22>:    movb   $0x1,0x0
+   0xffffffff813ed51e <+30>:    pop    %rbp
+   0xffffffff813ed51f <+31>:    retq
+End of assembler dump.
+~~~
+
+### disas /m sysrq_handle_crash+22 ###
+~~~
+crash> disas /m sysrq_handle_crash+22
+Dump of assembler code for function sysrq_handle_crash:
+134     {
+   0xffffffff813ed500 <+0>:     nopl   0x0(%rax,%rax,1)
+   0xffffffff813ed505 <+5>:     push   %rbp
+   0xffffffff813ed506 <+6>:     mov    %rsp,%rbp
+
+135             char *killer = NULL;
+136
+137             /* we need to release the RCU read lock here,
+138              * otherwise we get an annoying
+139              * 'BUG: sleeping function called from invalid context'
+140              * complaint from the kernel before the panic.
+141              */
+142             rcu_read_unlock();
+143             panic_on_oops = 1;      /* force panic */
+   0xffffffff813ed509 <+9>:     movl   $0x1,0x5fe341(%rip)        # 0xffffffff819eb854 <panic_on_oops>
+
+144             wmb();
+   0xffffffff813ed513 <+19>:    sfence
+
+145             *killer = 1;
+   0xffffffff813ed516 <+22>:    movb   $0x1,0x0
+~~~
+
+### ps ###
+~~~
+crash> ps
+   PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
+>     0      0   0  ffffffff819c1460  RU   0.0       0      0  [swapper/0]
+      0      0   1  ffff88007c061f60  RU   0.0       0      0  [swapper/1]
+      1      0   0  ffff88007c7b0000  IN   0.2  125456   3820  systemd
+      2      0   1  ffff88007c7b0fb0  IN   0.0       0      0  [kthreadd]
+      3      2   0  ffff88007c7b1f60  IN   0.0       0      0  [ksoftirqd/0]
+      5      2   0  ffff88007c7b3ec0  IN   0.0       0      0  [kworker/0:0H]
+      7      2   0  ffff88007c7b5e20  IN   0.0       0      0  [migration/0]
+      8      2   0  ffff88007c7b6dd0  IN   0.0       0      0  [rcu_bh]
+      9      2   1  ffff88007c060000  IN   0.0       0      0  [rcu_sched]
+~~~
+
+
+
 
 
 
