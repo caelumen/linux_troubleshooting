@@ -1,6 +1,5 @@
 # 강의 
-- 강의 자료 [강의자료] : https://s3.ap-northeast-2.amazonaws.com/windflex/linux_troubleshooting/docs/(Day3)Linux_TroubleShooting_v0.7.pptx
-
+- [강의자료] : [첨부]
 
 # [ AWS ]
 
@@ -15,7 +14,7 @@
  - https://s3.ap-northeast-2.amazonaws.com/windflex/test_key/test_key_share.pem
  - ssh -i test_key_share.pem ec2-user@13.124.162.236
 
-# 2. AWS 설치 #
+# 2. AWS 가입 및 실행 #
 ![AWS 가입 및 설치]https://aws.amazon.com/ko/
 - AWS 가입이 완료되면, EC2의 인스턴스 생성
 - Key Pair 확보, Private Key 중요 !!!
