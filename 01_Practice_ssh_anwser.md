@@ -48,3 +48,21 @@
 - 각 파일들의 권한 체크
 - key file 복사 시 빠진 문자가 없는지 점검
 - 경우에 따라서, 앞에 몇자리가 빠지고 복사되는 경우 다수 발생 
+
+
+# 실습이 끝나고 불필요한 계정 삭제 #
+<pre>
+userdel -r student
+</pre>
+
+# Public Open 된 대상에는 Brute-force 공격이 다수 유입 #
+- key pair로 무의미한 공격이지만, 그래도 안전성을 향상 시킵시다. 
+- login 시도 확인
+<pre>
+grep 'invalid user' /var/log/auth.log | awk '{F=" "}{print$9}' | sort - | uniq -c | sort -nr
+</pre>
+or
+<pre>
+grep 'invalid user' /var/log/secure | awk '{F=" "}{print$9}' | sort - | uniq -c | sort -nr
+</pre>
+
