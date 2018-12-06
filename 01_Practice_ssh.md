@@ -1,4 +1,4 @@
-#실습 문제#
+# 실습 문제 #
 
 1. AWS에 Linux 자원 (Server instance) 만들것
 
