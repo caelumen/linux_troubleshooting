@@ -13,6 +13,10 @@
 |-e	|--erase	패키지 삭제 |  
 |-V	|--verify	패키지 검증 |  
 |-K	|--checksig	서명 검증 |  
+|-a	|--all, query/verify all packages   |  
+|-f	|--file, query/verify package file |  
+
+
 
 
 
