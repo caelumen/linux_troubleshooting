@@ -8,8 +8,8 @@
 
 - AWS Server에서, sutdent 계정을 생성한다.
 <pre>
-sudo adduser student
-sudo passwd student
+[AWS student ~]$ sudo adduser student
+[AWS student ~]$ sudo passwd student
 </pre>
 
 3. 신규계정으로 SSH에 접속할 수 있도록 환경 구성 할것
