@@ -1,8 +1,6 @@
 
 # GDB BackTrace Example #
 ~~~
-<pre>
-<code>
 
 (gdb) bt
 
@@ -31,7 +29,5 @@
 #6  0x9fffffffbbc74510:2 in inline std::allocator<char>::allocator() ()
     at /opt/aCC/include_std/memory:250
 
-</code>
-</pre>
    ~~~ 
 출처: http://donzbox.tistory.com/199 [DonzBox]
