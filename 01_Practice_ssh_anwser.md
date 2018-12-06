@@ -28,7 +28,7 @@
  
 <pre>
 [clu_1 ~]$ cd ~/.ssh
-[clu_1 ~]$ ssh-keygen -y
+[clu_1 ~]$ ssh-keygen
 [clu_1 ~]$ vi id_rsa.pub
 </pre>
 
