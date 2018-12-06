@@ -79,7 +79,7 @@ gcc -g -o test ./test_01.c
 ## seg fault ##
 wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_01.c
 
-`gdb ./test core xxx`
+- `gdb ./test core xxx`
 
 ~~~
 (gdb) list main
@@ -99,18 +99,27 @@ wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/mast
 `./test_03`
 `Aborted (core dumped)`
 
-## strace 결과 비교 ##
-`starce ./test_03`
+## strace/ltrace 결과 비교 ##
+- `starce ./test_03`
 ~~~
 writev(3, [{"*** Error in `", 14}, {"./test_03", 9}, {"': ", 3}, {"double free or corruption (fastt"..., 35}, {": 0x", 4}, {"00000000011a4010", 16}, {" ***\n", 5}], 7*** Error in `./test_03': double free or corruption (fasttop): 0x00000000011a4010 ***
 ~~~
 - 실행 결과로 출력된 에러메세지 정도만 알 수 있다. 
 - 뭐 이건, 굳이 strace를 하지 않아도...
 
+- `ltrace ./test_03`
+~~~
+[root@clu_1 ~]# ltrace ./test_03 
+__libc_start_main(0x400688, 1, 0x7ffded483d68, 0x4006c0 <unfinished ...>
+malloc(1)                                            = 0x611010
+free(0x611010)                                       = <void>
+free(0x611010*** Error in `./test_03': double free or corruption (fasttop): 0x0000000000611010 ***
+~~~
+
 
 ## GDB 실행 with core dump ##
 
-`gdb ./test_03 core.xxx`
+- `gdb ./test_03 core.xxx`
 
 - 실행하면 아래와 같은 header 메세지를 볼 수 있다. 
 ~~~
@@ -122,7 +131,7 @@ Program terminated with signal 6, Aborted.
 Missing separate debuginfos, use: debuginfo-install libgcc-4.8.5-28.el7_5.1.x86_64
 ~~~
 
-`(gdb) bt`
+- `(gdb) bt`
 ~~~
 (gdb) bt
 #0  0x00007fcf9ffa7277 in __GI_raise (sig=sig@entry=6)
@@ -191,7 +200,7 @@ Dump of assembler code for function Abnormal:
 
 ~~~
 
-`(gdb)info functions`
+- `(gdb)info functions`
 ~~~
 File ./test_03.c:
 void Abnormal();
@@ -200,8 +209,8 @@ void Normal();
 int main(int, char **);
 ~~~
 
-- 기타 지역변수 확인
-`(gdb) info local`
+### 기타 지역변수 확인 ###
+- `(gdb) info local`
 
 
 
@@ -226,10 +235,10 @@ rpm -qa httpd
 systemctl start httpd 
 systemctl status httpd
 ~~~
-## [참조] RPM 명렁어 요약 ##
+### [참조] RPM 명렁어 요약 ###
 - https://github.com/windflex-sjlee/linux_troubleshooting/blob/master/rpm_cmd_info.md
 
-`ps -ef | grep http`
+- `ps -ef | grep http`
 
 ~~~
 [root@clu_1 ~]# ps -ef | grep http
@@ -244,7 +253,7 @@ root      4158  3749  0 19:46 pts/0    00:00:00 grep --color=auto http
 
 - root 가 실행해준 Apache Daemon process를 잡는다. 
 
-`gdb /usr/sbin/httpd 4125`  or   `gdb -q -p 4125`
+- `gdb /usr/sbin/httpd 4125`  or   `gdb -q -p 4125`
   - q 옵션 : quite 
 
 ~~~
@@ -268,7 +277,7 @@ root      4158  3749  0 19:46 pts/0    00:00:00 grep --color=auto http
 ~~~
 
 - 실행중인 프로세스에서 core 파일을 생성해 준다. (이것은 Process의 스냅샷이라고 보면 된다. )
-`(gdb) generate-core-file `
+- `(gdb) generate-core-file `
 
 ### 종료시에는 기존 프로세스와 분리 시켜주자 ###
 `(gdb) detach`
