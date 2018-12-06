@@ -10,6 +10,7 @@
 <pre>
 [AWS student ~]$ sudo adduser student
 [AWS student ~]$ sudo passwd student
+[AWS student ~]$ su - student
 </pre>
 
 3. 신규계정으로 SSH에 접속할 수 있도록 환경 구성 할것
