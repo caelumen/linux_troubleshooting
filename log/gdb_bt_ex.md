@@ -30,4 +30,24 @@
     at /opt/aCC/include_std/memory:250
 
    ~~~ 
-출처: http://donzbox.tistory.com/199 [DonzBox]
+   
+   
+   ## frame ##
+   
+   ~~~
+   (gdb) f 4
+
+#4  0x9fffffffb99ec310:0 in int nexcore::sql::SqlManager::select<TestFun*,bool
+
+    (this=0x600000000006d0c0, statementId=@0x9fffffffffffde00,
+
+    params=0x9fffffffffffde30, c=0x60000000001340b0, mf=(bool ( class TestFun
+
+    ::*)(class nexcore::sql::Record *...)) -147599808)
+
+    at /home/jsh/nexbuild/nana/include/nexcore/sql/SqlManager.hpp:157 
+    157      record.setValue( colNames[i], rset->getString(i+1) );
+
+   ~~~
+   
+   
