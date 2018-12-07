@@ -59,7 +59,7 @@ core file size          (blocks, -c) unlimited
 ~~~
 
 ## normal file( not seg fault )##
-wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_011.c
+wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_01_normal.c
 
 <pre>
 gcc -g -o test ./test_01.c
