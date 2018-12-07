@@ -25,10 +25,12 @@
 path /var/crash
 core_collector makedumpfile -l --message-level 1 -d 31
 ~~~
-- dump-level : 0~31 , message-level : 0~31 (0에 가까울 수록 Full Dump )
+- `dump-level : 0~31` , `message-level : 0~31` (0에 가까울 수록 Full Dump )
 
-`net nfs.example.com:/export/vmcores` : NFS
-`net kdump@crash.example.com`  : SSH/SCP - 해당서버의 /var/crash에 저장 
+~~~
+net nfs.example.com:/export/vmcores : NFS
+net kdump@crash.example.com  : SSH/SCP - 해당서버의 /var/crash에 저장 
+~~~
 - 위와 같이 원격지 (NFS, SSH) 설정 가능
   (Client에서 해당 mount에 쓰기권한 필요 ) 
 
