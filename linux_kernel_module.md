@@ -1,37 +1,40 @@
 # Linux Kernel Module #
 
+CentOS 등 Linux 시스템에서 Kernel mode에서 동작하는 프로그램을 위해서는, Kernel Module을 작성하여, 모듈을 등록한다. 
+디바이스 드라이버와 같은 Kernel Module들이 바로 이것이다. 
 
-CentOS 등 시스템에서 디바이스 드라이버와 같은 커스텀 Kernel Module을 컴파일하기위해서는,
-Kernel header file을 시스템에 인스톨 해야 한다. 
+Kernel Module을 컴파일하기 위해서는, Kernel Module이 사용하는 함수/구조체/상수 등에대한 definition을 포함하고 있는 Header파일 (C언어)가 필요하다. 이러한, Header파일은 Package Manager를 사용하여 설치할 수 있는데, 이 때, 커널버전을 일치 시켜야 한다. 
 
-kernel header file은 Linux Kernel을 위한 C의 Header파일을 포함하며, 
-Kernel과 인터페이스를 위한 코드 작성을 위한 함수/구조체 등의 Definition을 제공한다.
+만약, Kernel upgrade 등으로 커널 버전을 변경했다면, Kernel Version에 매칭 되는 Kernel-Header를 설치해야하며, 
+Source로부터 커널을 컴파일하여 Kernel을 사용한다며, 필히 소스로부터 kernel header로 부터 인스톨 해야 한다. 
 
-Kernel Header를 설치할 때, 현재 Kernel 버전을 확이이 꼭 필요하다. 
-만약 Kernel Version 버전을 변경(Kernel Upgrade 등으로)했다면 커너버전에 매칭되는
-package manager를 사용하여 Kernel header를 일치 시켜야만 한다. 
+kernel header 등은 kernel-devel package를 설치하면 된다. 
 
-만약, Source로 부터 커널을 컴파일했다면, 소스로부터 Kernel header를 인스톨 해야 할것 이다. 
-
-
-/usr/src/kernels 디렉터리에 어떤 커널도 존재하지 않는다면, 
-kernel-devel package를 설치하여 kerne header를 설치할 수 있다. 
-
+다음 위치를 확인해 해본다. 만약, 마무런 파일/디렉토리가 없다면, kernel-devel이 설치되지 않은것 이므로 yum을 통하여 설치하도록 한다.
 ~~~
-yum install kernel-devel
+[root@clu_1 lkm]# ll /usr/src/kernels/
+total 4
+drwxr-xr-x 22 root root 4096 Oct 19 09:26 3.10.0-514.el7.x86_64
 ~~~
+위는 3.10.0 대 커널의 kernel-devel이 설치되어 있다. 
 
-설치가 완료 되었다면, 
+아무것도 설치가 되어 있지 않다면, 아래처러 추가 설치 할 수 있다. 
 ~~~
-ls -l /usr/src/kernels/$(uname -r)
+[root@clu_1 lkm]# yum install kernel-devel
+[root@clu_1 lkm]# ls -l /usr/src/kernels/$(uname -r)
 ~~~
-로 설치된 Kernel Header를 확인할 수 있다.
+설치 후, `$(uname -r)`을 통하여 현재 버전에 맞는 커널인지 재확인 할 수 있다. 
 
 
 또한, glibc의 사용이 필요할 경우, kernel-header 패키지를 설치하면 된다. 
 ~~~
-yum install kernel-headers
+[root@clu_1 lkm]# yum install kernel-headers
 ~~~
+
+# Kernel module #
+
+- Kernel-devel을 통한 Kernel header 등 개발에 필요한 소스들이 설치 되었다면, 실제 Kernel module을 빌드해 보자.
+- 우선 Kernel module에 대한 Hello world 샘플이다. 
 
 ## kernel module 샘플 ##
 ~~~
@@ -57,6 +60,12 @@ static void __exit hello_cleanup(void)
 module_init(hello_init);
 module_exit(hello_cleanup);
 ~~~
+
+- hello.c를 작성했다면, Compile을 해야 한다. 
+- CC hello -o hello.c 를 통하여 컴파일을 할 수 있을 것이다.
+- 그러나, Kernel Module Build에 필요한 라이브러리/Header 등 경로가 다소 복잡할 수 있으므로, 
+- Makefile Macro를 통하여 옵션들을 설정하여 준다. 
+* Makefile 내에서 make 명령어를 실행하는 부분은 첫문자열이 <Tab> 문자열로 시작하여야 한다. 
 
 
 ## Makefile 샘플 1 ##
@@ -84,8 +93,8 @@ clean:
 	rm test
 
 
-make KSRC=/usr/src/linux-headers-4.9.2 all
-make KSRC=/lib
+[root@clu_1 lkm]# make KSRC=/usr/src/linux-headers-4.9.2 all
+[root@clu_1 lkm]# make KSRC=/lib
 ~~~
 
 
