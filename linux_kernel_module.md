@@ -62,7 +62,7 @@ module_exit(hello_cleanup);
 ~~~
 
 - hello.c를 작성했다면, Compile을 해야 한다. 
-- CC hello -o hello.c 를 통하여 컴파일을 할 수 있을 것이다.
+- CC hello.c -o hello 를 통하여 컴파일을 할 수 있을 것이다.
 - 그러나, Kernel Module Build에 필요한 라이브러리/Header 등 경로가 다소 복잡할 수 있으므로, 
 - Makefile Macro를 통하여 옵션들을 설정하여 준다. 
 * Makefile 내에서 make 명령어를 실행하는 부분은 첫문자열이 <Tab> 문자열로 시작하여야 한다. 
@@ -87,7 +87,7 @@ KSRC := /lib/modules/$(shell uname -r)/build
 
 all:
 	make -C $(KSRC) M=$(PWD) modules
-	$(CC) Hello.c -o test
+	$(CC) hello.c -o test
 clean:
 	make -C $(KSRC) M=$(PWD) clean
 	rm test
