@@ -3,6 +3,6 @@ obj-m+=hello.o
 KSRC := /lib/modules/$(shell uname -r)/build
 
 all:
-  make -C $(KSRC) M=$(PWD) modules
+\t make -C $(KSRC) M=$(PWD) modules
 clean:
-  make -C $(KSRC) M=$(PWD) clean
+\t make -C $(KSRC) M=$(PWD) clean
