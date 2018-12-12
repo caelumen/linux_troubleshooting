@@ -1,11 +1,11 @@
-[ Git Help ]
+# [ Git Help ] #
 참조 : https://nolboo.kim/blog/2013/10/06/github-for-beginner/
 
 
-~~~
+```bash
 git config --global user.name "이름"
 git config --global user.email "깃허브 메일주소" // 매번 물어보는 귀찮음을 피하기 위해 설정.
-~~~
+```
 
 
 ~~~
