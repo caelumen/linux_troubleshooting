@@ -98,8 +98,8 @@ clean:
 ~~~
 
 
-## Makefile ##
-Makefile (make용 Macro)에서 make 실행 명령어 부분의 앞은 TAB으로 구분/분리 해야 한다. 
+## Compile/make 실행 ##
+다시 강조하면, Makefile (make용 Macro)에서 make 실행 명령어 부분의 앞은 TAB으로 구분/분리 해야 한다. 
 ex) \t make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 
