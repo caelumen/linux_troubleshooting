@@ -62,12 +62,18 @@ git push origin master // 깃허브로 푸시한다.
 
 ~~~
 [root@clu_1 lkm]# git remote remove origin
-[root@clu_1 lkm]# git remote add origin https://github.com/windflex-sjlee/linux_troubleshooting.git
+[root@clu_1 lkm]# git remote add origin https://github.com/windflex-sjlee/linux_kernel_module.git
 [root@clu_1 lkm]# git remote -v
-origin  https://github.com/windflex-sjlee/linux_troubleshooting.git (fetch)
-origin  https://github.com/windflex-sjlee/linux_troubleshooting.git (push)
+origin  https://github.com/windflex-sjlee/linux_kernel_module.git (fetch)
+origin  https://github.com/windflex-sjlee/linux_kernel_module.git (push)
 [root@clu_1 lkm]# git push origin master
 Username for 'https://github.com': windflex-sjlee
 Password for 'https://windflex-sjlee@github.com':
 ~~~
 
+~~~
+[root@clu_1 lkm]# git add *
+[root@clu_1 lkm]# git push origin master
+Username for 'https://github.com': windflex-sjlee
+Password for 'https://windflex-sjlee@github.com':
+~~~
