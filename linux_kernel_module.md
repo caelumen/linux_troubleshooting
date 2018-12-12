@@ -321,6 +321,9 @@ drwxr-xr-x 2 root root 44 Dec  6 21:20 127.0.0.1-2018-12-06-21:20:34
 [ 1346.366492] CR2: 0000000000000000
 ~~~
 
+- Oops 코드가 0002를 볼 때,  No Page found, Read/Execute, Kernel mode의 에러임을 알수 있다. 
+- RIP 가 hello_cleanup에서 에러가 발생 했다. [hello_2] 라는 영역인것을 확인 할 수 있다. 
+
 ## Crash 분석 ##
 ~~~
 [root@clu_1 127.0.0.1-2018-12-06-21:20:34]# pwd
