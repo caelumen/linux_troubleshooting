@@ -478,3 +478,14 @@ ffff88007b9cfc00 224.0.0.22      ETHER      01:00:5e:00:00:16  docker0  NOARP
 ffff88007af3f200 10.0.2.2        ETHER      52:54:00:12:35:02  enp0s3  STALE
 
 ~~~
+
+
+# 실습 #
+
+```bash
+$ yum install git -y
+$ git clone https://github.com/windflex-sjlee/linux_kernel_module.git
+$ linux_kernel_module/install.sh
+$ linux_kernel_module/fault.sh
+```
+
