@@ -3,8 +3,8 @@
 
 
 ```bash
-git config --global user.name "이름"
-git config --global user.email "깃허브 메일주소" // 매번 물어보는 귀찮음을 피하기 위해 설정.
+$ git config --global user.name "이름"
+$ git config --global user.email "깃허브 메일주소" // 매번 물어보는 귀찮음을 피하기 위해 설정.
 ```
 
 
@@ -24,19 +24,19 @@ $ git push origin master // 깃허브로 푸시한다.
 
 # 예제 #
 
-~~~
+~~~bash
 [root@clu_1 lkm]# git config --global user.name "Sangjae Lee"
 [root@clu_1 lkm]# git config --global user.email "Git Email Address"
 ~~~
 
-~~~
+~~~bash
 [root@clu_1 lkm]# git init
 [root@clu_1 lkm]# git add hello.c
 [root@clu_1 lkm]# git add hello_2.c
 [root@clu_1 lkm]# git add Makefile
 ~~~
 
-~~~
+~~~bash
 [root@clu_1 lkm]# git status
 # On branch master
 # Initial commit
@@ -50,7 +50,7 @@ $ git push origin master // 깃허브로 푸시한다.
    [ 생   략 ]
 ~~~
 
-~~~
+~~~bash
 [root@clu_1 lkm]# git commit -m "init Linux Kernel Module v.0.1"
 [master (root-commit) 8f1deb9] init Linux Kernel Module v.0.1
  3 files changed, 54 insertions(+)
@@ -59,7 +59,7 @@ $ git push origin master // 깃허브로 푸시한다.
  create mode 100644 hello_2.c
 ~~~
 
-~~~
+~~~bash
 [root@clu_1 lkm]# git remote remove origin
 [root@clu_1 lkm]# git remote add origin https://github.com/windflex-sjlee/linux_kernel_module.git
 [root@clu_1 lkm]# git remote -v
@@ -70,7 +70,7 @@ Username for 'https://github.com': windflex-sjlee
 Password for 'https://windflex-sjlee@github.com':
 ~~~
 
-~~~
+~~~bash
 [root@clu_1 lkm]# git add *
 [root@clu_1 lkm]# git push origin master
 Username for 'https://github.com': windflex-sjlee
