@@ -189,6 +189,9 @@ find: ‘/run/user/1000/gvfs’: Permission denied
 - 이상발생 시점이 저장되었으며, 이제 저장된 상태를 분석해야 한다. 
 - vmcore가 정상적으로 dump 되었을 경우, crash 명령어를 통하여 분석할 수 있다.
 
+* vmcore file 은 `/var/crash/<host-ip>-<date>` 형태의 위치에 저장된다. 이때 date는 hardware clock인데,
+  때때로, virtualbox에서 hardware clock 동기화가 되지 않을 경우가 있다. 
+  이 경우, `hwclock -w` 를 통해서 동기화 할 수 있다.
 
 ### CRASH 명령어 ###
 - `crash <vmlinux> <vmcore>`
