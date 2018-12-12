@@ -317,8 +317,11 @@ crash> ps
 # Kernel Module #
 
 ### kernel module을 이용한 Kernel Crash 및 분석 ###
-
+- 커널모듈 install source
 https://github.com/windflex-sjlee/linux_kernel_module/blob/master/README.md
+
+- [커널 모듈 분석]
+https://github.com/windflex-sjlee/linux_troubleshooting/blob/master/linux_kernel_module.md
 
 ```bash
 $ wget https://raw.githubusercontent.com/windflex-sjlee/linux_kernel_module/master/start_kernel_crash.sh
