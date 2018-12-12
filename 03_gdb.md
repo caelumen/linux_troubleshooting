@@ -2,7 +2,7 @@
 
 # 03. Application Debugger  #
 
-### 시작 전, 시간이 소요 될 수 있는 다음을 실행 해 둔다 ###
+### (pre) 시작 전, 시간이 소요 될 수 있는 다음을 실행 해 둔다 ###
 ~~~
 yum install debuginfo-install 
 debuginfo-install procps-ng
@@ -11,12 +11,12 @@ debuginfo-install procps-ng
 `yum --enablerepo=base-debuginfo install –y kernel-debuginfo-$(uname -r)`
 
 
-## GDB (GNU Debugger) 개요 ##
+## 1.GDB (GNU Debugger) 개요 ##
 - Strace 는 모니터링 대상의 System call 을 추적한다.
 - ltrace는 모니터링 대상이 사용하는 library를 추적한다. 
 - GDB는 Debugger이다. Windows의 Visual Studio 및 Eclipse에서의 Debugger mode를 생각하면 된다. 
 
-## Application 구동 원리 ##
+## 2. Application 구동 원리 ##
 - Application 과 연관된 Troubleshooting을 위해서는 Application 구동 원리를 이해 해야 한다.
  - 1) application Process 구동
  - 2) Application Memory에 적재
@@ -30,7 +30,7 @@ debuginfo-install procps-ng
 - RIP 실행 중에, memory 생성 ==> heap 생성/적재
 
 
-## core dump ##
+## 3. core dump ##
 - core file을 남기도록 설정
 `ulimit -a`
 ~~~
@@ -58,14 +58,14 @@ file locks                      (-x) unlimited
 core file size          (blocks, -c) unlimited
 ~~~
 
-## normal file( not seg fault )##
+## 4. normal file( not seg fault )##
 wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_01_normal.c
 
 <pre>
 gcc -g -o test ./test_01.c
 </pre>
 
-## debugging을 둘러보자... ##
+## 5. debugging을 둘러보자... ##
 
 `gdb ./test`
 
@@ -79,7 +79,8 @@ gcc -g -o test ./test_01.c
 (gdb) b *main
 ~~~
 
-## seg fault ##
+## 6. Seg. Fault  ##
+- Segmentation Fault 
 wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_01.c
 
 - `gdb ./test core xxx`
@@ -94,7 +95,8 @@ wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/mast
 (gdb) info register   
 ~~~
 
-## 좀 더 복잡한 예를 들어보자 backtrace example ##
+## 7. Seg. Fault 예제 ##
+- 좀 더 복잡한 예를 들어보자 backtrace example 
 wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_03.c
 
 
@@ -102,7 +104,7 @@ wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/mast
 `./test_03`
 `Aborted (core dumped)`
 
-## strace/ltrace 결과 비교 ##
+## 8. strace/ltrace 결과 비교 ##
 - `starce ./test_03`
 ~~~
 writev(3, [{"*** Error in `", 14}, {"./test_03", 9}, {"': ", 3}, {"double free or corruption (fastt"..., 35}, {": 0x", 4}, {"00000000011a4010", 16}, {" ***\n", 5}], 7*** Error in `./test_03': double free or corruption (fasttop): 0x00000000011a4010 ***
@@ -120,7 +122,7 @@ free(0x611010*** Error in `./test_03': double free or corruption (fasttop): 0x00
 ~~~
 
 
-## GDB 실행 with core dump ##
+## 9. GDB 실행 with core dump ##
 
 - `gdb ./test_03 core.xxx`
 
@@ -212,12 +214,12 @@ void Normal();
 int main(int, char **);
 ~~~
 
-### 기타 지역변수 확인 ###
+### 1기타 지역변수 확인 ###
 - `(gdb) info local`
 
 
 
-## 내부 명령어 디버깅 - 내부 debug용 소스파일 다운로드 ##
+## 10. 내부 명령어 디버깅 - 내부 debug용 소스파일 다운로드 ##
 
 ~~~
 yum install debuginfo-install 
@@ -227,7 +229,7 @@ debuginfo-install procps-ng
 `gdb /bin/free`
 `(gdb) list `
 
-## 기존 프로세스에 gdb attach ##
+## 11. 기존 프로세스에 gdb attach ##
 
 ~~~
 ps -ef | grep http
