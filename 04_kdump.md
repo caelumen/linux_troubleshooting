@@ -316,8 +316,12 @@ crash> ps
 
 # Kernel Module #
 
+
 https://github.com/windflex-sjlee/linux_kernel_module/blob/master/README.md
 
+```bash
+$ wget https://raw.githubusercontent.com/windflex-sjlee/linux_kernel_module/master/start_kernel_crash.sh
+```
 
 
 
