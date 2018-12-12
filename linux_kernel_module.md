@@ -37,7 +37,7 @@ drwxr-xr-x 22 root root 4096 Oct 19 09:26 3.10.0-514.el7.x86_64
 - 우선 Kernel module에 대한 Hello world 샘플이다. 
 
 ## kernel module 샘플 ##
-~~~
+~~~C
 #include <linux/module.h>    // included for all kernel modules
 #include <linux/kernel.h>    // included for KERN_INFO
 #include <linux/init.h>      // included for __init and __exit macros
@@ -69,7 +69,7 @@ module_exit(hello_cleanup);
 
 
 ## Makefile 샘플 1 ##
-~~~
+~~~bash
 obj-m+=hello.o
 
 all:
@@ -80,7 +80,7 @@ clean:
 
 
 ## Makefile 샘플2 ##
-~~~
+~~~bash
 obj-m+=hello.o
 
 KSRC := /lib/modules/$(shell uname -r)/build
@@ -105,7 +105,7 @@ ex) \t make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 - make를 실행하여 Compile한다. 
 
-~~~
+~~~bash
 [root@clu_1 lkm]# make
 make -C /lib/modules/3.10.0-514.el7.x86_64/build M=/root/lkm modules
 make[1]: Entering directory `/usr/src/kernels/3.10.0-514.el7.x86_64'
@@ -115,7 +115,7 @@ make[1]: Leaving directory `/usr/src/kernels/3.10.0-514.el7.x86_64'
 ~~~
 
 - Compile 후 생성 `hello.o`, `hello.ko` 및 `hello.mod.o` 등이 바이너리 파일이 생성 된다. 
-~~~
+~~~bash
 [root@clu_1 lkm]# ll
 total 208
 -rw-r--r-- 1 root root   596 Dec 11 18:40 hello.c
@@ -132,7 +132,7 @@ total 208
 
 ## Kernel Module 로딩 ##
 - Compile된 모듈을 Kernel Module로 로딩 시킨다. (insmod)
-~~~
+~~~bash
 [root@clu_1 lkm]# insmod hello.ko
 [root@clu_1 lkm]# lsmod | grep hello
 hello                  12428  0
@@ -140,7 +140,7 @@ hello                  12428  0
 
 - Kernel Module로 로딩이 되면, `printk` 명령어에 의하여 Kernel Message를 출력한다. 
 - journalctl에 따라서, 어디에 로그를 남기는지가 결정될것이나, 현재는 messages로그에 출력된다. 
-~~~
+~~~bash
 [root@clu_1 lkm]# tail -20 /var/log/messages
 Dec 11 19:20:01 clu_1 systemd: Started Session 9 of user root.
 Dec 11 19:20:01 clu_1 systemd: Starting Session 9 of user root.
@@ -151,7 +151,7 @@ Dec 11 19:30:01 clu_1 systemd: Starting Session 10 of user root.
 ~~~
 
 - Kernel module 제거 (rmmod hello.ko - 마지막에 `.ko`를 붙여주어야 한다)
-~~~
+~~~bash
 [root@clu_1 lkm]# rmmod hello.ko
 [root@clu_1 lkm]# lsmod | grep hello
 [root@clu_1 lkm]# tail /var/log/messages
@@ -174,19 +174,19 @@ Dec 11 19:35:35 clu_1 kernel: Cleaning up module.
 - `#include <stdio.h>`와 같이 표준라이브러리를 입력한다면, 어떤 경로를 참조할까??
 - 이는, `/etc/ld.so.conf`를 참조한다. 
 - /etc/ld.so.conf 내용을 보면 아래와 같은 설정으로 되어 있다. 
-~~~
+~~~bash
 include ld.so.conf.d/*.conf
 ~~~
 즉, standard lib는 /etc/ld.so.conf.d/*.conf로 되어있는 파일을 참조하여 파일내에 있는 경로를 include 경로로 사용한다. 
 
 따라서, Standard Lib를 찾지 못할 경우, 아래와 같은 경로 추가가 필요하다. 
 
-~~~
+~~~bash
 touch /etc/ld.so.conf.d/lkm_test.conf
 vi /etc/ld.so.conf.d/lkm_test.conf
 ~~~
 아래 내용 입력
-~~~
+~~~bash
 /lib/modules/3.10.0-514.el7.x86_64/build/include/
 ~~~
 
@@ -201,7 +201,7 @@ ldconfig
 ## Build/compile with fault ##
 - 고의적으로 fault를 발생하는 hello_2.c를 생성한다. 
 - hello_cleanup()에 임의의 seg fault 를 발생한다. 
-~~~
+~~~C
 #include <linux/module.h>    // included for all kernel modules
 #include <linux/kernel.h>    // included for KERN_INFO
 #include <linux/init.h>      // included for __init and __exit macros
@@ -230,7 +230,7 @@ module_exit(hello_cleanup);
 
 - Makefile을 수정한다. (`obj-m+=hello_2.c` 추가)
 
-~~~
+~~~bash
 obj-m+=hello.o
 obj-m+=hello_2.o
 
@@ -244,7 +244,7 @@ clean:
 
 
 
-~~~
+~~~bash
 [root@clu_1 lkm]# ll
 total 408
 -rw-r--r-- 1 root root   674 Dec 12 09:47 hello_2.c
@@ -266,7 +266,7 @@ total 408
 hello_2                12428  0
 ~~~
 
-~~~
+~~~bash
 [root@clu_1 lkm]# tail -f /var/log/messages
 Dec 12 09:50:01 clu_1 systemd: Started Session 15 of user root.
 Dec 12 09:50:01 clu_1 systemd: Starting Session 15 of user root.
@@ -276,12 +276,12 @@ Dec 12 09:51:42 clu_1 kernel: Hello world!
 ## Kernel Fault 발생 ##
 
 아래를 실행하면 시스템은 Kernel Crash가 발생한다. 
-~~~
+~~~bash
 rmmod hello_2.ko
 ~~~
 
 - last 로그를 보면, crash가 발생하고 reboot가 일어난 것을 알 수 있다. 
-~~~
+~~~bash
 [root@clu_1 ~]# last
 root     pts/0        192.168.56.1     Wed Dec 12 09:56   still logged in
 (unknown :0           :0               Wed Dec 12 09:55   still logged in
@@ -294,7 +294,7 @@ root     pts/1        192.168.56.1     Tue Dec 11 18:38 - crash (-4+-21:-40)
 - `/var/log/messages`를 살펴보면, kernel module에서 printk에 의하여 발생하는 message를 확인 할 수 있다. 
 - Crash 발생에 따른, kdump 및 kexec가 실행 되었고, dump file은 /var/crash에서 vmcore를 확인 할 수 있다. 
 
-~~~
+~~~bash
 [root@clu_1 127.0.0.1-2018-12-06-21:20:34]# ll /var/crash
 total 0
 drwxr-xr-x 2 root root 44 Sep 27 15:13 127.0.0.1-2018-09-27-15:13:14
@@ -302,8 +302,7 @@ drwxr-xr-x 2 root root 44 Dec  6 20:57 127.0.0.1-2018-12-06-20:57:46
 drwxr-xr-x 2 root root 44 Dec  6 21:20 127.0.0.1-2018-12-06-21:20:34
 ~~~
 
-~~~
-
+~~~bash
 [root@clu_1 127.0.0.1-2018-12-06-21:20:34]# cat vmcore-dmesg.txt
 [ 1326.958977] Hello world!
 [ 1346.315773] Intentionally generating fault!
@@ -325,7 +324,7 @@ drwxr-xr-x 2 root root 44 Dec  6 21:20 127.0.0.1-2018-12-06-21:20:34
 - RIP 가 hello_cleanup에서 에러가 발생 했다. [hello_2] 라는 영역인것을 확인 할 수 있다. 
 
 ## Crash 분석 ##
-~~~
+~~~bash
 [root@clu_1 127.0.0.1-2018-12-06-21:20:34]# pwd
 /var/crash/127.0.0.1-2018-12-06-21:20:34
 [root@clu_1 127.0.0.1-2018-12-06-21:20:34]# find / -name vmlinux
@@ -338,7 +337,7 @@ find: ‘/run/user/42/gvfs’: Permission denied
 
 
 ## sys info ##
-~~~
+~~~bash
  KERNEL: /root/vmcore/3.10.0-514.el7.x86_64/vmlinux
     DUMPFILE: ./vmcore  [PARTIAL DUMP]
         CPUS: 2
@@ -360,8 +359,8 @@ LOAD AVERAGE: 0.00, 0.01, 0.05
 ~~~
 
 
-## backtrace ##
-~~~
+## Backtrace ##
+~~~bash
 crash> bt
 PID: 3787   TASK: ffff880057842f10  CPU: 0   COMMAND: "rmmod"
  #0 [ffff880035d4fb80] machine_kexec at ffffffff81059cdb
@@ -394,7 +393,7 @@ PID: 3787   TASK: ffff880057842f10  CPU: 0   COMMAND: "rmmod"
 
 ~~~
 
-~~~
+~~~bash
 crash> dis cleanup_module+18
     [중    략]
 ffffffffa05cc012 (t) cleanup_module+18 [hello_2]
@@ -409,7 +408,7 @@ crash>
 
 - 다시, log 명령어를 통하여, rmmod / cleanup_module 실행할 때 어떤 module에서 발생했는지 확인한다. 
 - 결과적으로, hello_2 명령어를 loading하고, 모듈을 제거(rmmod)할 때 Crash가 발생했음을 알 수 있다. 
-~~~
+~~~bash
 crash> log
     [중    략]
 [ 1326.958977] Hello world!
@@ -424,7 +423,7 @@ crash> log
 - 문제의 발생은 cleanup_modul+18에서 발생하고 있으며, 
 - 잘못된 메모리 참조( `movl $0x1, 0x0`)로 인한 커널로 확인 된다. 
 
-~~~
+~~~bash
 crash> dis hello_cleanup
 0xffffffffa05cc000 <hello_cleanup>:     push   %rbp
 0xffffffffa05cc001 <cleanup_module+1>:  mov    $0xffffffffa05cd050,%rdi
@@ -443,7 +442,7 @@ crash> dis hello_cleanup
 ## 그 밖의 정보 출력/확인 ##
 - 이번 예제에서는 특별한 의미는 없으나, memory를 확인한다. 
 
-~~~
+~~~bash
 crash> kmem -i
                  PAGES        TOTAL      PERCENTAGE
     TOTAL MEM   470918       1.8 GB         ----
@@ -463,7 +462,7 @@ crash> kmem -i
 ~~~
 
 - Network connection 및 interface를 확인한다. (특이 사항 없음)
-~~~
+~~~bash
 crash> net -a
 NEIGHBOUR        IP ADDRESS      HW TYPE    HW ADDRESS         DEVICE  STATE
 ffff88007a4e6e00 239.255.255.250 ETHER      01:00:5e:7f:ff:fa  enp0s3  NOARP
