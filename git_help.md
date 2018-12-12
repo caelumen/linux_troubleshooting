@@ -1,18 +1,23 @@
 [ Git Help ]
-ÂüÁ¶ : https://nolboo.kim/blog/2013/10/06/github-for-beginner/
+ì°¸ì¡° : https://nolboo.kim/blog/2013/10/06/github-for-beginner/
 
 
-git config --global user.name "ÀÌ¸§"
-git config --global user.email "±êÇãºê ¸ŞÀÏÁÖ¼Ò" // ¸Å¹ø ¹°¾îº¸´Â ±ÍÂúÀ½À» ÇÇÇÏ±â À§ÇØ ¼³Á¤.
+~~~
+git config --global user.name "ì´ë¦„"
+git config --global user.email "ê¹ƒí—ˆë¸Œ ë©”ì¼ì£¼ì†Œ" // ë§¤ë²ˆ ë¬¼ì–´ë³´ëŠ” ê·€ì°®ìŒì„ í”¼í•˜ê¸° ìœ„í•´ ì„¤ì •.
+~~~
 
-mkdir ~/MyProject   // ·ÎÄÃ µğ·ºÅä¸® ¸¸µé°í
-cd ~/myproject      // µğ·ºÅä¸®·Î µé¾î°¡¼­
-git init            // ±ê ¸í·É¾î¸¦ »ç¿ëÇÒ ¼ö ÀÖ´Â µğ·ºÅä¸®·Î ¸¸µç´Ù.
-git status          // ÇöÀç »óÅÂ¸¦ ÈÈ¾îº¸°í
-git add È­ÀÏ¸í.È®ÀåÀÚ  // ±ê ÁÖ¸ñ ¸®½ºÆ®¿¡ È­ÀÏÀ» Ãß°¡ÇÏ°í or
-git add .           // ÀÌ ¸í·ÉÀº ÇöÀç µğ·ºÅä¸®ÀÇ ¸ğµç È­ÀÏÀ» Ãß°¡ÇÒ ¼ö ÀÖ´Ù.
-git commit -m ¡°ÇöÀçÇüÀ¸·Î ¼³¸í¡± // Ä¿¹ÔÇØ¼­ ½º³À¼¦À» Âï´Â´Ù.
+~~~
+mkdir ~/MyProject   // ë¡œì»¬ ë””ë ‰í† ë¦¬ ë§Œë“¤ê³ 
+cd ~/myproject      // ë””ë ‰í† ë¦¬ë¡œ ë“¤ì–´ê°€ì„œ
+git init            // ê¹ƒ ëª…ë ¹ì–´ë¥¼ ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” ë””ë ‰í† ë¦¬ë¡œ ë§Œë“ ë‹¤.
+git status          // í˜„ì¬ ìƒíƒœë¥¼ í›‘ì–´ë³´ê³ 
+git add í™”ì¼ëª….í™•ì¥ì  // ê¹ƒ ì£¼ëª© ë¦¬ìŠ¤íŠ¸ì— í™”ì¼ì„ ì¶”ê°€í•˜ê³  or
+git add .           // ì´ ëª…ë ¹ì€ í˜„ì¬ ë””ë ‰í† ë¦¬ì˜ ëª¨ë“  í™”ì¼ì„ ì¶”ê°€í•  ìˆ˜ ìˆë‹¤.
+git commit -m â€œí˜„ì¬í˜•ìœ¼ë¡œ ì„¤ëª…â€ // ì»¤ë°‹í•´ì„œ ìŠ¤ëƒ…ìƒ·ì„ ì°ëŠ”ë‹¤.
 
-git remote add origin https://github.com/username/myproject.git // ·ÎÄÃ°ú ¿ø°İ ÀúÀå¼Ò¸¦ ¿¬°áÇÑ´Ù.
-git remote -v // ¿¬°á»óÅÂ¸¦ È®ÀÎÇÑ´Ù.
-git push origin master // ±êÇãºê·Î Çª½ÃÇÑ´Ù.
+git remote add origin https://github.com/username/myproject.git // ë¡œì»¬ê³¼ ì›ê²© ì €ì¥ì†Œë¥¼ ì—°ê²°í•œë‹¤.
+git remote -v // ì—°ê²°ìƒíƒœë¥¼ í™•ì¸í•œë‹¤.
+git push origin master // ê¹ƒí—ˆë¸Œë¡œ í‘¸ì‹œí•œë‹¤.
+
+~~~
