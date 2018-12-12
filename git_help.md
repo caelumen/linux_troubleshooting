@@ -7,6 +7,7 @@ git config --global user.name "이름"
 git config --global user.email "깃허브 메일주소" // 매번 물어보는 귀찮음을 피하기 위해 설정.
 ~~~
 
+
 ~~~
 mkdir ~/MyProject   // 로컬 디렉토리 만들고
 cd ~/myproject      // 디렉토리로 들어가서
@@ -21,3 +22,42 @@ git remote -v // 연결상태를 확인한다.
 git push origin master // 깃허브로 푸시한다.
 
 ~~~
+
+# 예제 #
+
+~~~
+[root@clu_1 lkm]# git config --global user.name "Sangjae Lee"
+[root@clu_1 lkm]# git config --global user.email "Git Email Address"
+~~~
+
+~~~
+[root@clu_1 lkm]# git init
+[root@clu_1 lkm]# git add hello.c
+[root@clu_1 lkm]# git add hello_2.c
+[root@clu_1 lkm]# git add Makefile
+~~~
+
+~~~
+[root@clu_1 lkm]# git status
+# On branch master
+# Initial commit
+# Changes to be committed:
+#       new file:   Makefile
+#       new file:   hello.c
+#       new file:   hello_2.c
+# Untracked files:
+#       .hello.ko.cmd
+#       .hello.mod.o.cmd
+   [ 생   략 ]
+~~~
+
+~~~
+[root@clu_1 lkm]# git commit -m "init Linux Kernel Module v.0.1"
+[master (root-commit) 8f1deb9] init Linux Kernel Module v.0.1
+ 3 files changed, 54 insertions(+)
+ create mode 100644 Makefile
+ create mode 100644 hello.c
+ create mode 100644 hello_2.c
+~~~
+
+
