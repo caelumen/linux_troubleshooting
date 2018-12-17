@@ -69,6 +69,24 @@ yum --enablerepo=base-debuginfo install –y kernel-debuginfo-$(uname -r)
 </pre>
 
 
+
+### Crash 분석을 위한 kernel-debuginfo 패키지 설치 ###
+```
+yum --enablerepo=base-debuginfo install –y kernel-debuginfo-$(uname -r)
+```
+설치가 완료 되면, 아래 경로에서 vmlinux를 확보할 수 있다.
+```
+/usr/lib/debug/lib/modules/3.10.0-514.el7.x86_64/vmlinux
+```
+
+### 현재 사용하는 커널버전과 다른 커널을 설치할 경우, ###
+```
+yum --enablerepo=base-debuginfo install –y kernel-debuginfo-<커널버전>
+```
+```
+/usr/lib/debug/lib/modules/<커널버전>
+```
+
 ## kdump 구동 확인 ##
 
 - `systemctl start kdump`
