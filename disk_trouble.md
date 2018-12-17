@@ -48,13 +48,14 @@ tmpfs                235459      2  235457    1% /run/user/0
 ```
 
 
-- 현재 디렉토리의 용량확인
+## 현재 디렉토리의 용량확인 ##
 ```
 [root@clu_1 ~]# du -hs
 799M    .
 ```
+- options : h (human-readable), s (summary)
 
-- 현재 디렉토리 및 파일 용량 확인
+## 현재 디렉토리 및 파일 용량 확인 ##
 ```
 [root@clu_1 ~]# du -hs *
 4.0K    anaconda-ks.cfg
