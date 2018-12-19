@@ -89,6 +89,11 @@ drwxrwxrwt.  23 root root  4096 Dec 19 11:11 tmp
 # Network
 
 
+## netstat
+
+## ss ( CentOS 7 부터 기본 사용)
+- ss 명령어가 좀 더 최적화 되어 있다. 좀 더 빠르다. 
+
 
 
 
