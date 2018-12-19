@@ -550,10 +550,159 @@ Linux version 3.10.0-514.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc versi
 ![커널버전 확인](img/img_kernel_version_check_001.png)
 
 
+3. kernel package를 다운로드 한다. (**yumdownloader 사용**)
+
+```bash
+[root@clu_1 vga1]# yumdownloader kernel-3.10.0-957.1.3.el7.x86_64 --resolve
+    [ 중략 ]
+(1/3): updates/7/x86_64/primary_db                                                               | 1.3 MB  00:00:04
+(2/3): epel/x86_64/updateinfo                 29% [==========                         ]  70 kB/s | 1.7 MB  00:00:59 ETA
+
+```
+> `yumdownloader kernel-<버전> --resolve` 를 통해서 다운로드 한다.
 
 
+4. Kernel (update 버전) 설치 
+- 다운로드 받은 update버전 kernel을 설치한다. `yum install kernel-<버전>.rpm`
+
+```bash
+[root@clu_1 vga1]# yum install kernel-3.10.0-957.1.3.el7.x86_64.rpm
+   [ 중 략 ]
+Is this ok [y/d/N]: y
+Downloading packages:
+No Presto metadata available for base
+(1/16): dracut-config-rescue-033-554.el7.x86_64.rpm                                              |  59 kB  00:00:00
+(2/16): dracut-network-033-554.el7.x86_64.rpm                                                    | 102 kB  00:00:00
+(3/16): dracut-033-554.el7.x86_64.rpm                                                            | 327 kB  00:00:00
+   [이하 생략]
+```
+
+5. 리부팅 (커널 설치 완료 후 rebooting이 필요)
+```bash
+systemctl reboot
+```
+
+6. 부팅 커널 목록을 확인 한다. ( grub설정 확인)
+ - 부팅 시 Kernel을 선택하고, Kernel version에 맞게 설정이 되어야 한다. 따라서, Grub의 부팅 설정을 확인하여야 한다. 
+ - `cat /boot/grub2/grub.cfg`
+ 
+ ```bash
+ ### BEGIN /etc/grub.d/10_linux ###
+menuentry 'CentOS Linux (3.10.0-957.1.3.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-514.el7.x86_64-advanced-b587c2f3-973b-466b-bbe1-dfdcae0bb792' {
+        load_video
+        set gfxpayload=keep
+        insmod gzio
+        insmod part_msdos
+        insmod xfs
+        set root='hd0,msdos1'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos1 --hint-efi=hd0,msdos1 --hint-baremetal=ahci0,msdos1 --hint='hd0,msdos1'  5acf284e-58fa-4819-8cd9-fcd0152dcde0
+        else
+          search --no-floppy --fs-uuid --set=root 5acf284e-58fa-4819-8cd9-fcd0152dcde0
+        fi
+        linux16 /vmlinuz-3.10.0-957.1.3.el7.x86_64 root=/dev/mapper/cl-root ro crashkernel=auto rd.lvm.lv=cl/root rd.lvm.lv=cl/swap rhgb quiet LANG=en_US.utf8
+        initrd16 /initramfs-3.10.0-957.1.3.el7.x86_64.img
+}
+menuentry 'CentOS Linux (3.10.0-514.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-514.el7.x86_64-advanced-b587c2f3-973b-466b-bbe1-dfdcae0bb792' {
+        load_video
+        set gfxpayload=keep
+        insmod gzio
+        insmod part_msdos
+        insmod xfs
+        set root='hd0,msdos1'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos1 --hint-efi=hd0,msdos1 --hint-baremetal=ahci0,msdos1 --hint='hd0,msdos1'  5acf284e-58fa-4819-8cd9-fcd0152dcde0
+        else
+          search --no-floppy --fs-uuid --set=root 5acf284e-58fa-4819-8cd9-fcd0152dcde0
+        fi
+        linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root ro crashkernel=auto rd.lvm.lv=cl/root rd.lvm.lv=cl/swap rhgb quiet LANG=ko_KR.UTF-8
+        initrd16 /initramfs-3.10.0-514.el7.x86_64.img
+}
+menuentry 'CentOS Linux (0-rescue-f2067e66a598453ca1d8d5d812fa3022) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-0-rescue-f2067e66a598453ca1d8d5d812fa3022-advanced-b587c2f3-973b-466b-bbe1-dfdcae0bb792' {
+        load_video
+        insmod gzio
+        insmod part_msdos
+        insmod xfs
+        set root='hd0,msdos1'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos1 --hint-efi=hd0,msdos1 --hint-baremetal=ahci0,msdos1 --hint='hd0,msdos1'  5acf284e-58fa-4819-8cd9-fcd0152dcde0
+        else
+          search --no-floppy --fs-uuid --set=root 5acf284e-58fa-4819-8cd9-fcd0152dcde0
+        fi
+        linux16 /vmlinuz-0-rescue-f2067e66a598453ca1d8d5d812fa3022 root=/dev/mapper/cl-root ro crashkernel=auto rd.lvm.lv=cl/root rd.lvm.lv=cl/swap rhgb quiet
+        initrd16 /initramfs-0-rescue-f2067e66a598453ca1d8d5d812fa3022.img
+}
+
+### END /etc/grub.d/10_linux ###
+ ```
+  > grub 설정은 cfg 파일을 직접 수정하지 않고, 일반적으로 `grub2-mkconfig`명령어를 통하여 확인/수정 한다. 
+
+![부팅 메뉴 엔트리](img/img_kernel_update_grub_menuentry_001.png)
+ > **/boot/grub2/grub.cfg** 설정에 따라 MenuEntry가 3개 설정되어 있는 것을 확인할 수 있다. 
+ 
+ ```bash
+ [root@clu_1 ~]# grub2-editenv list
+saved_entry=CentOS Linux (3.10.0-957.1.3.el7.x86_64) 7 (Core)
+ ```
+ > `grub2-editenv list` 명령어를 통해 현재 적용되어 있는 **saved_entry**를 확인할 수 있다. grub는 커널종류를 menuentry를 통해서 선택하게 되어 있어, saved_entry라 함은 곧 기본 선택될 kernel 설정을 의미한다. 
+ 
+ > `grub2-set-default 0` 명령어는 menuentry 중에서 기본설정이 무엇인지를 설정한다. 0은 첫번째 메뉴를 선택하도록 설정한다. 
+
+ > 특별한 일이 없다면, grub의 설정은 kernel version에 맞게 수정된다. 체크해야 할 사항은 업데이트한 menuetry의 커널버전이 제대로 설정되어 있는지 확인한다. 
 
 
+6. 업데이트 한 커널을 삭제 (원복)
+- 커널 목록 확인 : `rpm -qa kernel`
+```bash
+[root@clu_1 ~]# rpm -qa kernel
+kernel-3.10.0-957.1.3.el7.x86_64
+kernel-3.10.0-514.el7.x86_64
+```
+> Kernel이 2개 설치되어 있다.
+
+- 커널 삭제 : `yum remove kernel-<버전>`
+```bash
+[root@clu_1 ~]# cat /proc/version
+Linux version 3.10.0-957.1.3.el7.x86_64 (mockbuild@kbuilder.bsys.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-36) (GCC) ) #1 SMP Thu Nov 29 14:49:43 UTC 2018
+[root@clu_1 ~]# yum remove kernel-3.10.0-957.1.3.el7.x86_64
+Loaded plugins: fastestmirror, langpacks
+Skipping the running kernel: kernel-3.10.0-957.1.3.el7.x86_64
+No Packages marked for removal
+```
+> 구동중인 커널은 삭제할 수가 없으므로, 이전 버전으로 rebooting 후 구동하지 않는 버전의 Kernel을 삭제 해야 한다. 
+
+```bash
+[root@clu_1 ~]# cat /proc/version
+Linux version 3.10.0-514.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-11) C) ) #1 SMP Tue Nov 22 16:42:41 UTC 2016
+[root@clu_1 ~]# yum remove kernel-3.10.0-957.1.3.el7.x86_64
+Loaded plugins: fastestmirror, langpacks
+Resolving Dependencies
+--> Running transaction check
+---> Package kernel.x86_64 0:3.10.0-957.1.3.el7 will be erased
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=====================================================================================================================
+ Package                Arch                   Version                               Repository                 Size
+=====================================================================================================================
+Removing:
+ kernel                 x86_64                 3.10.0-957.1.3.el7                    installed                  63 M
+
+Transaction Summary
+=====================================================================================================================
+Remove  1 Package
+
+Installed size: 63 M
+Is this ok [y/N]: y
+```
+
+- 커널 삭제 후 다시 삭제 여부 확인 : `rpm -qa kernel`
+
+```bash
+[root@clu_1 ~]# rpm -qa kernel
+kernel-3.10.0-514.el7.x86_64
+```
 
 
 
