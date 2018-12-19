@@ -546,7 +546,8 @@ Linux version 3.10.0-514.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc versi
 ```
 
 2. update할 커널 버전을 확인한다. 
-[커널버전 확인](!./img/img_kernel_version_check_001.png)
+
+![커널버전 확인](img/img_kernel_version_check_001.png)
 
 
 
