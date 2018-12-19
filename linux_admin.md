@@ -705,6 +705,121 @@ kernel-3.10.0-514.el7.x86_64
 ```
 > 이전에 설치하였던, kernel-x86_64 0:3.10.0-957.1.3.el7 버전이 설치 목록에서 삭제 되었다.
 
+## HTTP YUM Repository 구성
+
+기업 환경에서는 Server Zone에서 외부(OutBound)로 접근이 불가능한 환경도 존재한다. 
+또한, 기업 내부 규정에 따른 검토/검증으로 인하여 내부에서 인정된 Package만 설치하도록 Private Repository를 구성/운영하기도 한다. 
+
+
+### HTTP Server 설치/구동
+```bash
+[root@clu_1 ~]# yum install httpd -y
+[root@clu_1 ~]# systemctl enable httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+[root@clu_1 ~]# systemctl start httpd
+[root@clu_1 ~]# systemctl list-unit-files | grep http
+httpd.service                                 enabled
+```
+
+```bash
+[root@clu_1 ~]# systemctl status httpd
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Wed 2018-12-19 17:52:11 KST; 5min ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 10079 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/httpd.service
+           ├─10079 /usr/sbin/httpd -DFOREGROUND
+           ├─10081 /usr/sbin/httpd -DFOREGROUND
+           ├─10082 /usr/sbin/httpd -DFOREGROUND
+           ├─10083 /usr/sbin/httpd -DFOREGROUND
+           ├─10084 /usr/sbin/httpd -DFOREGROUND
+           └─10085 /usr/sbin/httpd -DFOREGROUND
+
+Dec 19 17:52:11 clu_1 systemd[1]: Starting The Apache HTTP Server...
+Dec 19 17:52:11 clu_1 httpd[10079]: AH00558: httpd: Could not reliably determine the server's fully qualifie...essage
+Dec 19 17:52:11 clu_1 systemd[1]: Started The Apache HTTP Server.
+Hint: Some lines were ellipsized, use -l to show in full.
+```
+
+### HTTP 서비스 확인
+
+```bash
+[root@clu_1 ~]# cat > /var/www/html/index.html
+<html><body><h1>test</h1></body></html>
+```
+![테스트 index](img/img_http_repository_html_001)
+> TEST용 index.html을 만들어서 접속이 원활함을 확인한다. 
+
+
+### 저장할 패키지 다운로드
+
+```bash
+[root@clu_1 ~]# mkdir /var/www/html/addon_package
+[root@clu_1 ~]# cd /var/www/html/addon_package/
+[root@clu_1 addon_package]# pwd
+/var/www/html/addon_package
+[root@clu_1 addon_package]# yumdownloader wireshark-gnome.x86_64 --resolve
+Loaded plugins: fastestmirror, langpacks
+   [ 중  략 ]
+[root@clu_1 addon_package]# ls
+wireshark-1.10.14-16.el7.x86_64.rpm  wireshark-gnome-1.10.14-16.el7.x86_64.rpm
+```
+
+![HTTP Repository 확인](img/ims_http_repo_package_001)
+> HTTP 서버를 통해서  wireshark 패키지 다운이 가능함을 확인 할 수 있다. 
+
+### Repository 서버 구성
+
+```bash
+[root@clu_1 addon_package]# createrepo /var/www/html/addon_package/
+Spawning worker 0 with 1 pkgs
+Spawning worker 1 with 1 pkgs
+Workers Finished
+Saving Primary metadata
+Saving file lists metadata
+Saving other metadata
+Generating sqlite DBs
+Sqlite DBs complete
+[root@clu_1 addon_package]# ll
+total 13732
+drwxr-xr-x 2 root root     4096 Dec 19 18:12 repodata
+-rw-r--r-- 1 root root 13119688 Nov 12 23:49 wireshark-1.10.14-16.el7.x86_64.rpm
+-rw-r--r-- 1 root root   932216 Nov 12 23:49 wireshark-gnome-1.10.14-16.el7.x86_64.rpm
+```
+
+
+### Yum 을 사용할 때, repo 설정 
+```bash
+[root@clu_1 addon_package]# yum-config-manager --add-repo=http://192.168.56.5/addon_package
+Loaded plugins: fastestmirror, langpacks
+adding repo from: http://192.168.56.5/addon_package
+
+[192.168.56.5_addon_package]
+name=added from: http://192.168.56.5/addon_package
+baseurl=http://192.168.56.5/addon_package
+enabled=1
+
+[root@clu_1 addon_package]# yum repolist
+Loaded plugins: fastestmirror, langpacks
+192.168.56.5_addon_package                                                                    | 2.9 kB  00:00:00
+192.168.56.5_addon_package/primary_db                                                         | 4.1 kB  00:00:00
+    [ 중    략 ]
+repo id                                      repo name                                                         status
+192.168.56.5_addon_package                   added from: http://192.168.56.5/addon_package                          2
+base/7/x86_64                                CentOS-7 - Base                                                   10,019
+*epel/x86_64                                 Extra Packages for Enterprise Linux 7 - x86_64                    12,744
+extras/7/x86_64                              CentOS-7 - Extras                                                    321
+updates/7/x86_64                             CentOS-7 - Updates                                                   609
+repolist: 23,695
+```
+
+
+
+
+
 
 
 
