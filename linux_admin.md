@@ -497,7 +497,7 @@ sdd              8:48   0    1G  0 disk
 └─sdd1           8:49   0 1023M  0 part
   └─VG02-vda1  253:2    0  1.9G  0 lvm  /vga1
 sr0             11:0    1 1024M  0 rom
-```
+
 [root@clu_1 vga1]# df -h
 Filesystem             Size  Used Avail Use% Mounted on
 /dev/mapper/cl-root     10G  9.3G  731M  93% /
@@ -509,7 +509,7 @@ tmpfs                  920M     0  920M   0% /sys/fs/cgroup
 /dev/mapper/VG02-vda1  1.9G   33M  1.9G   2% /vga1
 tmpfs                  184M   16K  184M   1% /run/user/42
 tmpfs                  184M     0  184M   0% /run/user/0
-
+```
 
 ## LVM 삭제
 - 먼저 mount를 해제한다. 
@@ -703,6 +703,13 @@ Is this ok [y/N]: y
 [root@clu_1 ~]# rpm -qa kernel
 kernel-3.10.0-514.el7.x86_64
 ```
+> 이전에 설치하였던, kernel-x86_64 0:3.10.0-957.1.3.el7 버전이 설치 목록에서 삭제 되었다.
+
+
+
+
+
+
 
 
 
