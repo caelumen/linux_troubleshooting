@@ -276,6 +276,200 @@ $template FILENAME, "/var/log/remote/%hostname%/message_%$YEAR%%$MONTH%%$DAY%.lo
 > grep 의 -2 옵션은 조건매칭된 행을 기준으로 +/- 2개행을 함께 출력하라는 의미 이다. 
 
 
+# LVM (Logical Volume Manager)
+
+물리적인 디스크들을 하나의 논리 디스크로 관리하는 기능이다. 아래와 같은 장점과 기능 지원 사항이 있다.
+- 서로 다른 디바이스 조합 지원
+- 확장성
+- 직관적인 저장장치로의 접근
+- 편리한 관리
+- 안정성 및 효율성, 스냅샷 지원 등
+
+> LVM1에서 LVM2로 업데이트되었다. 보다 효율적인 메타데이터 스토리지를 관리 한다.
+
+## PV (Physical Volume)
+- HDD를 등록하면 잡히는 물리 볼륨으로 Linux에서는 **/dev/sda1**, **/dev/sda2**와 같은 명칭으로 표기된다.
+
+## VG( Volume Group )
+
+
+
+
+## LVM 설정하기 
+
+```bash
+[root@clu_1 ~]# fdisk -l | grep Disk.*byte
+Disk /dev/sda: 12.9 GB, 12884901888 bytes, 25165824 sectors
+Disk /dev/sdb: 1073 MB, 1073741824 bytes, 2097152 sectors
+Disk /dev/sdc: 1073 MB, 1073741824 bytes, 2097152 sectors
+Disk /dev/sdd: 1073 MB, 1073741824 bytes, 2097152 sectors
+Disk /dev/mapper/cl-root: 10.7 GB, 10733223936 bytes, 20963328 sectors
+Disk /dev/mapper/cl-swap: 1069 MB, 1069547520 bytes, 2088960 sectors
+Disk /dev/mapper/VG01-note8: 20 MB, 20971520 bytes, 40960 sectors
+```
+
+
+```bash
+[root@clu_1 ~]# pvcreate /dev/sdc1
+  Physical volume "/dev/sdc1" successfully created.
+[root@clu_1 ~]# pvcreate /dev/sdd1
+  Physical volume "/dev/sdd1" successfully created.
+[root@clu_1 ~]# pvs
+  PV         VG   Fmt  Attr PSize    PFree
+  /dev/sda2  cl   lvm2 a--    11.00g    4.00m
+  /dev/sdb1  VG01 lvm2 a--  1020.00m 1000.00m
+  /dev/sdc1       lvm2 ---  1023.00m 1023.00m
+  /dev/sdd1       lvm2 ---  1023.00m 1023.00m
+[root@clu_1 ~]# lsblk
+NAME           MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda              8:0    0   12G  0 disk
+├─sda1           8:1    0    1G  0 part /boot
+└─sda2           8:2    0   11G  0 part
+  ├─cl-root    253:0    0   10G  0 lvm  /
+  └─cl-swap    253:1    0 1020M  0 lvm  [SWAP]
+sdb              8:16   0    1G  0 disk
+└─sdb1           8:17   0 1023M  0 part
+  └─VG01-note8 253:2    0   20M  0 lvm
+sdc              8:32   0    1G  0 disk
+└─sdc1           8:33   0 1023M  0 part
+sdd              8:48   0    1G  0 disk
+└─sdd1           8:49   0 1023M  0 part
+sr0             11:0    1 1024M  0 rom
+
+[root@clu_1 ~]# vgcreate VG2 /dev/sdc1 /dev/sdd1
+  Volume group "VG2" successfully created
+[root@clu_1 ~]# vgs
+  VG   #PV #LV #SN Attr   VSize    VFree
+  VG01   1   1   0 wz--n- 1020.00m 1000.00m
+  VG2    2   0   0 wz--n-    1.99g    1.99g
+  cl     1   2   0 wz--n-   11.00g    4.00m
+[root@clu_1 ~]# vgrename VG2 VG02
+  Volume group "VG2" successfully renamed to "VG02"
+
+```
+
+
+
+
+```bash
+[root@clu_1 ~]# lvcreate -n vda1 -L 1G VG02
+  Logical volume "vda1" created.
+
+[root@clu_1 ~]# lvs
+  LV    VG   Attr       LSize    Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  note8 VG01 -wi-a-----   20.00m
+  vda1  VG02 -wi-a-----    1.00g
+  root  cl   -wi-ao----   10.00g
+  swap  cl   -wi-ao---- 1020.00m
+[root@clu_1 ~]# lvscan
+  ACTIVE            '/dev/cl/root' [10.00 GiB] inherit
+  ACTIVE            '/dev/cl/swap' [1020.00 MiB] inherit
+  ACTIVE            '/dev/VG02/vda1' [1.00 GiB] inherit
+  ACTIVE            '/dev/VG01/note8' [20.00 MiB] inherit
+[root@clu_1 ~]# df -T
+Filesystem          Type     1K-blocks    Used Available Use% Mounted on
+/dev/mapper/cl-root xfs       10471424 9723612    747812  93% /
+devtmpfs            devtmpfs    926196       0    926196   0% /dev
+tmpfs               tmpfs       941836      84    941752   1% /dev/shm
+tmpfs               tmpfs       941836    8984    932852   1% /run
+tmpfs               tmpfs       941836       0    941836   0% /sys/fs/cgroup
+/dev/sda1           xfs        1038336  176136    862200  17% /boot
+tmpfs               tmpfs       188368      16    188352   1% /run/user/42
+tmpfs               tmpfs       188368       0    188368   0% /run/user/0
+
+```
+물리디스크 -> 논리디스크 -> Logical Volume으로 잡았으며, 해당 영역을 포맷해준다.
+
+```bash
+[root@clu_1 ~]# mkfs.xfs /dev/VG02/vda1
+meta-data=/dev/VG02/vda1         isize=512    agcount=4, agsize=65536 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=262144, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+```
+> Linux에서 포맷은 **mkfs**명령을 사용한다. mkfs 명령어는 `mkfs.<파일시스템 Type> <LV Device위치>` 형태이다.
+
+
+
+그런데 아직 드라이브 리스트에 없다... mount를 안해줬기 때문이다. 
+```bash
+[root@clu_1 ~]# df -h
+Filesystem           Size  Used Avail Use% Mounted on
+/dev/mapper/cl-root   10G  9.3G  731M  93% /
+devtmpfs             905M     0  905M   0% /dev
+tmpfs                920M   84K  920M   1% /dev/shm
+tmpfs                920M  8.8M  911M   1% /run
+tmpfs                920M     0  920M   0% /sys/fs/cgroup
+/dev/sda1           1014M  173M  842M  17% /boot
+tmpfs                184M   16K  184M   1% /run/user/42
+tmpfs                184M     0  184M   0% /run/user/0
+
+[root@clu_1 /]# mkdir -p /vga1
+[root@clu_1 /]# mount -t xfs /dev/VGA02/vga1 /vga1
+[root@clu_1 /]# df -h
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mapper/cl-root     10G  9.3G  731M  93% /
+devtmpfs               905M     0  905M   0% /dev
+tmpfs                  920M   84K  920M   1% /dev/shm
+tmpfs                  920M  8.8M  911M   1% /run
+tmpfs                  920M     0  920M   0% /sys/fs/cgroup
+/dev/sda1             1014M  173M  842M  17% /boot
+tmpfs                  184M   16K  184M   1% /run/user/42
+tmpfs                  184M     0  184M   0% /run/user/0
+/dev/mapper/VG02-vda1 1014M   33M  982M   4% /vga1
+
+```
+> mount 할 때 type을 xfs로 명시화 하였다. 
+
+
+- reboot할 때 마운트 설정을 유지하기 위해서는, **/etc/fstab** 파일에 설정이 필요하다. 
+- device name으로 설정도 가능하지만, device 명은 언제든지 변경될 수 있으므로 UUID 기준으로 설정한다. 
+
+```bash
+[root@clu_1 /]# blkid
+/dev/sda1: UUID="5acf284e-58fa-4819-8cd9-fcd0152dcde0" TYPE="xfs"
+/dev/sda2: UUID="mtGfIk-bgxw-Ot2w-pian-1gu7-acSD-mjdXju" TYPE="LVM2_member"
+/dev/sdb1: UUID="xPTmru-6sER-2O6c-I4PA-UPm8-ZME7-MHetXR" TYPE="LVM2_member"
+/dev/sdc1: UUID="lTZD2u-FaZs-QEKy-9jRs-ZOSV-wlkd-tAP3Ba" TYPE="LVM2_member"
+/dev/sdd1: UUID="OG4kb0-yfRS-mK9a-czDD-4xC6-prL9-WY503x" TYPE="LVM2_member"
+/dev/mapper/cl-root: UUID="b587c2f3-973b-466b-bbe1-dfdcae0bb792" TYPE="xfs"
+/dev/mapper/cl-swap: UUID="553d2364-70c2-43d3-b38a-afa138789b1b" TYPE="swap"
+/dev/mapper/VG01-note8: UUID="e42a0847-9732-49cc-8e8b-248b09d475c5" TYPE="xfs"
+/dev/mapper/VG02-vda1: UUID="52ab4382-5422-4f80-b3b0-9c8aa14e6407" TYPE="xfs"
+
+[root@clu_1 /]# vi /etc/fstab
+UUID=52ab4382-5422-4f80-b3b0-9c8aa14e6407 /vga1 xfs     defaults    0 0  # 추가 
+```
+> 장치의 UUID 확인을 위해서 **blkid** 명령을 사용하였다.
+> **/etc/fstab**에 UUID를 기준으로 mount 위치, filesystem, defaults 설정, 0, 0 을 추가 하였다. (상세설정은 fstab 참조)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
