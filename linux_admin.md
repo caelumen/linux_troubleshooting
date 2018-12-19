@@ -122,6 +122,15 @@ enp0s8:    3416      22    0    0    0     0          0         0        0      
 alias bond0 bonding
 ```
 > 여기에서는, boding 할 대상을 enp0s3, enp0s8로 가정한다.
+> modprobe는 과거의 insmod/rmmod를 대신한다. bond의 kernel moduel은 kernel driver에 이미 탑재되어 있다.(아래 참조) 
+위 bonding.conf는 bodning module이 적재될 때 자동 실행되는 conf를 설정한다. 여기서는 bonding이라는 이름 대신 bond0로 대신하도록 alias하였다. 
+
+```bash
+[root@clu_2 ~]# ls /usr/lib/modules/3.10.0-514.el7.x86_64/kernel/drivers/net/bonding/
+bonding.ko
+
+```
+
 
 
 - Bonding 구성 후 
@@ -182,12 +191,96 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 # logs
 
 ## journal
- - 
+ - CentOS 7 부터 로그시스템이 journal 을 통해서 분배되는 아키텍처로 바뀌었다. 
+ > CentOS 7 이전은 init.d가 모체 였으나, 버전 7부터 **systemd**가 프로세스의 모체로 바뀌었다. 
 
 - journalctl
   : journalctl -r 옵션 : 뒤에서 부터 볼 수 있다. 
 - /var/log/messages : info에 해당하는 로그만
 - /var/log/dmesg  ==> `journalctl -k`와 동일
+
+## logrotate
+- Log 저장 설정
+- 설정 파일 : /etc/logrotate.conf
+```bash
+[root@clu_1 docker]# cat /etc/logrotate.conf
+# see "man logrotate" for details
+# rotate log files weekly
+weekly
+
+# keep 4 weeks worth of backlogs
+rotate 4
+
+# create new (empty) log files after rotating old ones
+create
+
+# use date as a suffix of the rotated file
+dateext
+
+# uncomment this if you want your log files compressed
+#compress
+
+# RPM packages drop log rotation information into this directory
+include /etc/logrotate.d
+
+# no packages own wtmp and btmp -- we'll rotate them here
+/var/log/wtmp {
+    monthly
+    create 0664 root utmp
+        minsize 1M
+    rotate 1
+}
+
+/var/log/btmp {
+    missingok
+    monthly
+    create 0600 root utmp
+    rotate 1
+}
+
+# system-specific logs may be also be configured here.
+```
+
+
+
+
+# rsyslog
+> 설정파일은 **/etc/rsyslog.conf**
+
+
+## Client Side
+- 설정파일 변경 : remote server로 로그를 전송하도록 설정
+- udp 514
+- 보내는 로그의 종료 선택 : info/none 등
+
+```bash
+[root@clu_1 docker]# cat /etc/rsyslog.conf | grep @192
+*.info;mail.none;authpriv.none;cron.none                @192.168.56.102
+```
+> remote log server의 IP가 192.168.56.102라고 가정한다. (clu_2)
+
+## Server Side
+- remote에서 받아오는 서버를 특정 위치에 저장하도록 설정
+- udp 514
+
+```bash
+[root@clu_2 clu_1]# cat /etc/rsyslog.conf | grep "template\|UDP" -2
+# Provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun 514
+
+$template FILENAME, "/var/log/remote/%hostname%/message_%$YEAR%%$MONTH%%$DAY%.log"
+*.info;mail.none;authpriv.none;cron.none                ?FILENAME
+```
+> grep에서 여러개의 구문을 찾기위해서, "단어1\|단어2\|..." 형태로 입력할 수 있다. 
+> grep 의 -2 옵션은 조건매칭된 행을 기준으로 +/- 2개행을 함께 출력하라는 의미 이다. 
+
+
+
+
+
+
+
 
 
 
