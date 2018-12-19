@@ -750,7 +750,7 @@ Hint: Some lines were ellipsized, use -l to show in full.
 [root@clu_1 ~]# cat > /var/www/html/index.html
 <html><body><h1>test</h1></body></html>
 ```
-![테스트 index](img/img_http_repository_html_001)
+![테스트 index](img/img_http_repository_html_001.png)
 > TEST용 index.html을 만들어서 접속이 원활함을 확인한다. 
 
 
@@ -768,7 +768,7 @@ Loaded plugins: fastestmirror, langpacks
 wireshark-1.10.14-16.el7.x86_64.rpm  wireshark-gnome-1.10.14-16.el7.x86_64.rpm
 ```
 
-![HTTP Repository 확인](img/ims_http_repo_package_001)
+![HTTP Repository 확인](img/ims_http_repo_package_001.png)
 > HTTP 서버를 통해서  wireshark 패키지 다운이 가능함을 확인 할 수 있다. 
 
 ### Repository 서버 구성
