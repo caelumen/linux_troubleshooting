@@ -449,10 +449,104 @@ UUID=52ab4382-5422-4f80-b3b0-9c8aa14e6407 /vga1 xfs     defaults    0 0  # 추�
 > 장치의 UUID 확인을 위해서 **blkid** 명령을 사용하였다.
 > **/etc/fstab**에 UUID를 기준으로 mount 위치, filesystem, defaults 설정, 0, 0 을 추가 하였다. (상세설정은 fstab 참조)
 
+```bash
+[root@clu_1 ~]# lsblk
+NAME           MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda              8:0    0   12G  0 disk
+├─sda1           8:1    0    1G  0 part /boot
+└─sda2           8:2    0   11G  0 part
+  ├─cl-root    253:0    0   10G  0 lvm  /
+  └─cl-swap    253:1    0 1020M  0 lvm  [SWAP]
+sdb              8:16   0    1G  0 disk
+└─sdb1           8:17   0 1023M  0 part
+  └─VG01-note8 253:3    0   20M  0 lvm
+sdc              8:32   0    1G  0 disk
+└─sdc1           8:33   0 1023M  0 part
+  └─VG02-vda1  253:2    0    1G  0 lvm  /vga1
+sdd              8:48   0    1G  0 disk
+└─sdd1           8:49   0 1023M  0 part
+  └─VG02-vda1  253:2    0    1G  0 lvm  /vga1
+sr0             11:0    1 1024M  0 rom
+```
+
+## LVM Extention 
+- LVM을 확장하기 위해서는 lvextent 명령어를 통하여 확장, 파일시스템을 재구성한다. 
+
+```bash
+[root@clu_1 ~]# lvextend /dev/VG02/vda1 -L +0.9G
+  Rounding size to boundary between physical extents: 924.00 MiB.
+  Size of logical volume VG02/vda1 changed from 1.00 GiB (256 extents) to 1.90 GiB (487 extents).
+  Logical volume VG02/vda1 successfully resized.
+
+[root@clu_1 vga1]# xfs_growfs /dev/VG02/vda1
+  
+[root@clu_1 ~]# lsblk
+NAME           MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda              8:0    0   12G  0 disk
+├─sda1           8:1    0    1G  0 part /boot
+└─sda2           8:2    0   11G  0 part
+  ├─cl-root    253:0    0   10G  0 lvm  /
+  └─cl-swap    253:1    0 1020M  0 lvm  [SWAP]
+sdb              8:16   0    1G  0 disk
+└─sdb1           8:17   0 1023M  0 part
+  └─VG01-note8 253:3    0   20M  0 lvm
+sdc              8:32   0    1G  0 disk
+└─sdc1           8:33   0 1023M  0 part
+  └─VG02-vda1  253:2    0  1.9G  0 lvm  /vga1
+sdd              8:48   0    1G  0 disk
+└─sdd1           8:49   0 1023M  0 part
+  └─VG02-vda1  253:2    0  1.9G  0 lvm  /vga1
+sr0             11:0    1 1024M  0 rom
+```
+[root@clu_1 vga1]# df -h
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mapper/cl-root     10G  9.3G  731M  93% /
+devtmpfs               905M     0  905M   0% /dev
+tmpfs                  920M   84K  920M   1% /dev/shm
+tmpfs                  920M  8.8M  911M   1% /run
+tmpfs                  920M     0  920M   0% /sys/fs/cgroup
+/dev/sda1             1014M  172M  843M  17% /boot
+/dev/mapper/VG02-vda1  1.9G   33M  1.9G   2% /vga1
+tmpfs                  184M   16K  184M   1% /run/user/42
+tmpfs                  184M     0  184M   0% /run/user/0
+
+
+## LVM 삭제
+- 먼저 mount를 해제한다. 
+- LV를 삭제한다. 
+- VG를 삭제한다. 
 
 
 
 
+
+# Kernel Update
+
+
+## Kernel Update 일반적인 순서
+
+일반적으로 Kernel Update를 위해서 아래와 같은 순서에 따른다. 
+1. Release Note 확인. Bug Report를 확인한다.  https://wiki.centos.org/Manuals/ReleaseNotes
+2. Kernel Update를 위한 사전준비를 수행한다. OS백업 및 Repository 서버 확인 작업
+3. Update할 파일 확인. ` yum check-update kernel `
+4. Kernel update 진행. ` yum update kernel `
+5. 시스템을 재시작 한다. ` systemctl reboot `
+6. 업데이터 확인. `rpm -qa | grep kernel ` or `cat /etc/redhat-release`
+> 그러나, 현업에서는 kernel update 방법보다는, update할 kernel 파일을 다운받아서 Install로 진행한다. 잘못되었을 경우 원복 등 대응 하기 위함이다. 
+
+
+## Kernel Update
+- Kernel version 확인 : https://centos.pkgs.org
+- Kernel Download (CentOS7) : https://centos.pkgs.org/7/centos-updates-x86_64/2/
+
+1. 현재 **구동 중인** Kernel Version을 확인한다. (`cat /proc/version`)
+```bash
+[root@clu_1 vga1]# cat /proc/version
+Linux version 3.10.0-514.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-11) (GCC) ) #1 SMP Tue Nov 22 16:42:41 UTC 2016
+```
+
+2. update할 커널 버전을 확인한다. 
+[커널버전 확인](!./img/img_kernel_version_check_001.png)
 
 
 
