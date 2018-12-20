@@ -56,7 +56,7 @@ PasswordAuthentication no
 > `/etc/ssh/sshd_config` 설정 중 위 항목  참고
 
 
-# 문제 3. 
+# 문제 3. AWS 환경에서 SSH 구성
 - AWS에서 Linux (Amazon Linux2) 서버 자원 구성
 - AWS의 Key Pair를 변경해서 접속해 볼것
 - 신규 계정 (ex. student)를 만들어 SSH 접속 환경을 구성할 것
