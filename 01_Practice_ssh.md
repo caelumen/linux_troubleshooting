@@ -11,7 +11,7 @@
 # 문제 1.
 SSH Public Key를 이용하여 테스트 서버에 접속 해 본다.
   - clinet : 각자의 clu_1 vm linux
-  - server ip : 172.23.192.139
+  - server ip : 172.23.192.139 (변경 가능)
   - port : 9022
   - private key : wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/keys/id_rsa
 
