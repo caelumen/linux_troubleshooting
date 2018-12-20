@@ -444,5 +444,64 @@ Please specify an executable to debug.
 ~~~
 
 
+# memory leak 예제 실습
+
+```bash
+mkdir mleak
+cd mleak
+wget https://raw.githubusercontent.com/windflex-sjlee/gen_errors/master/mleak.c
+gcc -o mleak mleak.c
+
+./mleak 1000 1 0
+./mleak 10000000 1 1
+./mleak 10000000 10 1
+```
+> mleak 의 매개변수는 1) 반복횟수, 2) memory block size, 3) leak 수행 여부 이다.  
+
+## bash를 하나 더 띄워서, `top -d 1` 또는 `htop` 으로 현상을 관찰해 본다
+
+![htop](img/img_mleak_001.png)
+```bash
+[root@clu_1 mleak]# ./mleak 100000000 10 1
+=>> Start with n:100000000, M:10, leak:1 <<=
+==>file:memory_leak_20-22-37.log
+Killed
+```
+> cpu 소모, memory 소모, swap 소모, buffer/cache 등을 살펴 본다
+> process killed 왜 되었는가?
+> **log**를 확인해 봐라
 
 
+```bash
+[root@clu_1 mleak]# journalctl -r
+Dec 20 22:40:01 clu_1 CROND[3482]: (root) CMD (/usr/lib64/sa/sa1 1 1)
+Dec 20 22:40:01 clu_1 systemd[1]: Starting Session 5 of user root.
+Dec 20 22:40:01 clu_1 systemd[1]: Started Session 5 of user root.
+Dec 20 22:37:55 clu_1 kernel: Killed process 3453 (mleak) total-vm:2591552kB, anon-rss:1709632kB, file-rss:8kB, shmem-rs
+Dec 20 22:37:55 clu_1 kernel: Out of memory: Kill process 3453 (mleak) score 858 or sacrifice child
+Dec 20 22:37:55 clu_1 kernel: [ 3462]     0  3462    26988       18      10        0             0 sleep
+Dec 20 22:37:55 clu_1 kernel: [ 3453]     0  3453   647888   427410    1271   219419             0 mleak 
+    [중   략]
+Dec 20 22:37:55 clu_1 kernel: 53256 pages reserved
+Dec 20 22:37:55 clu_1 kernel: 0 pages HighMem/MovableOnly
+Dec 20 22:37:55 clu_1 kernel: 524174 pages RAM
+```
+
+### memory block을 작게하면 다른 형태로 process가 죽는다.
+```bash
+[root@clu_1 mleak]# ./mleak 100000000 1 1
+```
+> 왜 죽는가?
+
+```
+[root@clu_1 mleak]# df -h
+Filesystem           Size  Used Avail Use% Mounted on
+/dev/mapper/cl-root   10G   10G   24K 100% /
+devtmpfs             905M     0  905M   0% /dev
+tmpfs                920M   84K  920M   1% /dev/shm
+tmpfs                920M  8.8M  911M   1% /run
+tmpfs                920M     0  920M   0% /sys/fs/cgroup
+/dev/sda1           1014M  172M  843M  17% /boot
+tmpfs                184M   16K  184M   1% /run/user/42
+tmpfs                184M     0  184M   0% /run/user/0
+```
