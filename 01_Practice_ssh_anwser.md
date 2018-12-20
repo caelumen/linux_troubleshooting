@@ -108,18 +108,21 @@ ssh -i ./id_rsa
 
 
 # 실습이 끝나고 불필요한 계정 삭제 #
-<pre>
+```bash
 userdel -r student
-</pre>
+```
+
 
 # Public Open 된 대상에는 Brute-force 공격이 다수 유입 #
 - key pair로 무의미한 공격이지만, 그래도 안전성을 향상 시킵시다. 
 - login 시도 확인
-<pre>
+```bash
 grep 'invalid user' /var/log/auth.log | awk '{F=" "}{print$9}' | sort - | uniq -c | sort -nr
-</pre>
+```
+
 or
-<pre>
+
+```bash
 grep 'invalid user' /var/log/secure | awk '{F=" "}{print$9}' | sort - | uniq -c | sort -nr
-</pre>
+```
 
