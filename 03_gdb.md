@@ -493,7 +493,7 @@ Dec 20 22:37:55 clu_1 kernel: 524174 pages RAM
 ```
 > 왜 죽는가?
 
-```
+```bash
 [root@clu_1 mleak]# df -h
 Filesystem           Size  Used Avail Use% Mounted on
 /dev/mapper/cl-root   10G   10G   24K 100% /
@@ -505,3 +505,24 @@ tmpfs                920M     0  920M   0% /sys/fs/cgroup
 tmpfs                184M   16K  184M   1% /run/user/42
 tmpfs                184M     0  184M   0% /run/user/0
 ```
+
+```bash
+[root@clu_1 ~]# cat /proc/meminfo | grep -i slab
+Slab:              40152 kB
+```
+
+# cache clear, swap flush
+- cache clear
+```bash
+sync; echo 1 > /proc/sys/vm/drop_caches 
+sync; echo 2 > /proc/sys/vm/drop_caches
+```
+> 1 : 페이지 캐시, 2/3: dentry/inode
+
+- swap flush
+```bash
+swapoff -a && swapon -a
+```
+
+
+
