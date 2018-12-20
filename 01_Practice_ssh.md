@@ -57,19 +57,14 @@ PasswordAuthentication no
 
 
 # 문제 3. 
-## AWS에서 Linux (Amazon Linux2) 서버 자원 구성
-- key pair를 사용해서 AWS에 접속할것
-
-> Local PC에서 Putty 등 Client 접속 시에는 key file 변경 필요
-> Linux / MAC OS / Git Bash 등 사용 시에는 기본 key file 사용 가능
-
-
-## 문제 4. AWS의 Key Pair를 변경해서 접속해 볼것 
-- key pair가 변경 되었을 경우, SSH 전환
-- AWS는 key pair를 보관하지 않는다.
+- AWS에서 Linux (Amazon Linux2) 서버 자원 구성
+- AWS의 Key Pair를 변경해서 접속해 볼것
+- 신규 계정 (ex. student)를 만들어 SSH 접속 환경을 구성할 것
+> AWS는 key pair를 보관하지 않는다.
+> authorized_keys는 계정마다 개별 적용됨
 
 
-## 문제 5. Cluster 1 VM에서 AWS로 접속 해 볼것
+## 문제 4. Cluster 1 VM에서 AWS로 접속 해 볼것
 - 최종적으로, 실습 VM인 Cluster 1에서 AWS로 접속 해 볼것
 > key file 복사가 필요. key file 복사과정에서 실수 발생 가능성 높음에 주의
 
