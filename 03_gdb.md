@@ -46,7 +46,7 @@ $ objdump -d /bin/ls
 
 # **GDB 실습**
 
-## 3. core dump ##
+# 1. core dump 
 - core file을 남기도록 설정
 `ulimit -a`
 ~~~bash
@@ -74,7 +74,7 @@ file locks                      (-x) unlimited
 core file size          (blocks, -c) unlimited
 ~~~
 
-## 필요한 소스 다운로드 및 컴파일
+## 1-2. 필요한 소스 다운로드 및 컴파일
 
 ```bash
 wget https://raw.githubusercontent.com/windflex-sjlee/linux_troubleshooting/master/src/test_01_normal.c
@@ -94,7 +94,7 @@ total 20
 -rw-r--r-- 1 root root  63 Dec 20 20:59 test_04.py
 ```
 
-### 다운받은 파일들을 미리 컴파일해 둔다.
+## 1-3 다운받은 파일들을 미리 컴파일해 둔다.
 ```bash
 gcc -g -o test_01n ./test_01_normal.c
 gcc -g -o test_01 ./test_01.c
@@ -102,7 +102,7 @@ gcc -g -o test_02 ./test_02.c
 gcc -g -o test_03 ./test_03.c
 ```
 
-## 4. normal file( not seg fault )##
+## 1-4. normal file( not seg fault )##
 ### debugging을 둘러보자... ##
 
 
@@ -143,8 +143,8 @@ Dump of assembler code for function main:
 - info registers : register값을 출력한다. 
 
 
-# 6. Seg. Fault  
-## Segmentation Fault 
+# 2. Seg. Fault  
+## 2-1 Segmentation Fault 
 **Segmentation Fault란** 실행파일(Elf등)에서 메모리로 적재(load)되어 실행될 때, Process 간 영역(Segment)를 침범하였거나, 각 영역에 권한(Permission)에 위배되는 명령을 수행하였을 경우 발생한다. 일반적으로 메모리 관리를 잘못하여, Kernel 영역 혹은 실행 권한이 없는 영역으로 Jump가 실행되어 발생하는 것이 대부분이다. 또다른 경우로는, Stack / Heap 등 동적 메모리 영역이 넘쳐서 발생하기도 한다. 
 
 > Hacker는 segmentation falut가 발생하면 만세를 부른다.? 왜 ?!!
@@ -173,7 +173,7 @@ Missing separate debuginfos, use: debuginfo-install glibc-2.17-222.el7.x86_64
 > gdb를 실행하면, 초기 메세지에 요약 정보를 출력해 준다. 
 > gdb의 **-q**옵션은 quite 를 의미 한다. 초기 prompt message를 최소화 한다.
 
-### gdb 환경에서 아래 명령어 들을 수행해 보자. 
+##2-2 gdb 환경에서 아래 명령어 들을 수행해 보자. 
 ~~~bash
 (gdb) list main
 (gdb) set listsize 50
@@ -198,8 +198,8 @@ Missing separate debuginfos, use: debuginfo-install glibc-2.17-222.el7.x86_64
    0x00000000004005a5 <+120>:   mov    $0x0,%eax
 ```
 
-# 7. Seg. Fault 예제 
-## 좀 더 복잡한 예를 실행 한다. 
+# 3. Seg. Fault 예제 
+## 3-1. 좀 더 복잡한 예를 실행 한다. 
 > test_03
 
 ```bash
@@ -207,7 +207,7 @@ Missing separate debuginfos, use: debuginfo-install glibc-2.17-222.el7.x86_64
 *** Error in `./test_03': double free or corruption (fasttop): 0x000000000259d010 ***
 ```
 
-## 8. strace/ltrace 결과 비교 
+## 3-2. strace/ltrace 결과 비교 
 - `starce ./test_03`
 ~~~bash
 writev(3, [{"*** Error in `", 14}, {"./test_03", 9}, {"': ", 3}, {"double free or corruption (fastt"..., 35}, {": 0x", 4}, {"00000000011a4010", 16}, {" ***\n", 5}], 7*** Error in `./test_03': double free or corruption (fasttop): 0x00000000011a4010 ***
@@ -224,7 +224,7 @@ free(0x2389010)
 > libc 라이브러리에서 malloc, free 함수를 사용한 사실만을 확인해 준다. 
 
 
-## 9. GDB 실행 with core dump ##
+## 3-3. GDB 실행 with core dump ##
 
 - `gdb ./test_03 core.xxx`
 
@@ -249,10 +249,10 @@ Program terminated with signal 6, Aborted.
 Missing separate debuginfos, use: debuginfo-install glibc-2.17-222.el7.x86_64 libgcc-4.8.5-28.el7_5.1.x86_64
 ```
 
-## GDB 명령을 실행해 본다. 특히 **bt**를 눈여겨 본다. 
+## 3-4. GDB 명령을 실행해 본다. 특히 **bt**를 눈여겨 본다. 
 
 
-### **(gdb) bt **
+### (gdb) bt
 
 ```bash
 (gdb) bt
@@ -337,8 +337,8 @@ int main(int, char **);
 
 
 
-# 내부 명령어 디버깅 (free)
-## 내부명령어 중 **/bin/free**명령어를 GDB로 확인해 보자
+# 4. 내부 명령어 디버깅 (free)
+## 4-1. 내부명령어 중 **/bin/free**명령어를 GDB로 확인해 보자
 
 - 내부명령어의 GDB 분석을 위해서는 Source Code가 필요하다. 
 - Source Code 없이 분석도 가능하나, ASM 레벨에서 분석을 해야 하므로, 공객된 Source Code와 함께 분석한다. 
@@ -349,7 +349,7 @@ $ debuginfo-install procps-ng
 ~~~
 > **debuginfo-install**은 미리 다운로드 하도록 가이드 하였다.
 
-## GDB를 통하여 자유롭게 실습한다. 
+## 4-2. GDB를 통하여 자유롭게 실습한다. 
 ```bash
 gdb /bin/free
 (gdb) list
@@ -357,8 +357,8 @@ gdb /bin/free
 ```
 
 
-# 11. 기존 프로세스에 gdb attach 
-## apache daemon에 GDB를 붙여 본다.
+# 5. 기존 프로세스에 gdb attach 
+## 5-1. apache daemon에 GDB를 붙여 본다.
 
 ### Apache 설치 및 구동확인
 
@@ -400,7 +400,7 @@ root      4158  3749  0 19:46 pts/0    00:00:00 grep --color=auto http
 #5  0x00007f3434eddd76 in main ()
 ~~~
 
-### 현재 상태 및 실행 위치 확인
+## 5-2 현재 상태 및 실행 위치 확인
 - 현재 Apache 서비스는 다음과 같은 순서로 함수를 실행하고 정지 상태이다. (GDB가 Break를 걸고 있다.) 
 > main() -> ap_run_mpm() -> prefork_run()  -> ap_wait_or_timeout()  -> apr_sleep()  -> __select_nocancel()
 
@@ -410,7 +410,7 @@ root      4158  3749  0 19:46 pts/0    00:00:00 grep --color=auto http
 (gdb) list
 ~~~
 
-### 실행 상태에서 core 파일 생성
+## 5-3. 실행 상태에서 core 파일 생성
 - 실행 중인 상태에서는 **서비스 운영 등의 목적**으로 인하여 분석하기 어려운 경우가 많다. 따라서 현재 상태를 스냅샷 찍듯이 core파일을 생성하고, core파일을 통해서 상태 분석을 진행한다. 
 - 실행중인 프로세스에서 core 파일을 생성해 준다. (이것은 Process의 스냅샷이라고 보면 된다. )
 ```bash
