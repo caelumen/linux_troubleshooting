@@ -11,7 +11,7 @@
 - kernel이 정지하거나 Rebooting이 되면, 상태확인 하기 전에 정보가 휘발 됨
 - 상태를 기록해야할 필요 有
 - 평상시에 메모리에 상주하는 Dump용 커널을 적재
-~~~
+~~~bash
 [root@clu_1 ~]# cat /proc/iomem | grep kernel
   2a000000-340fffff : Crash kernel
 ~~~
